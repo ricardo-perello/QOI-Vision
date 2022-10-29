@@ -68,10 +68,10 @@ public final class Main {
         //assert testDecodeQoiOpLuma();
         //assert testDecodeQoiOpRun();
         //assert testDecodeData();
-        System.out.println("LOL");
+        
 
         System.out.println("All the tests passes. Congratulations");
-        System.out.println("hey");
+
     }
 
     // ============================================================================================
