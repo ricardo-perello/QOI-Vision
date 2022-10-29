@@ -71,7 +71,7 @@ public final class Main {
         System.out.println("LOL");
 
         System.out.println("All the tests passes. Congratulations");
-        System.out.println("test printing");
+        System.out.println("hey");
     }
 
     // ============================================================================================
