@@ -30,23 +30,23 @@ public final class ArrayUtils {
      */
     public static boolean equals(byte[] a1, byte[] a2) {
 
-        assert !(((a1.length == 0) && (a2.length != 0)) || ((a2.length == 0) && (a1.length != 0)));
+        assert !(((a1.length == 0) && (a2.length != 0)) || ((a2.length == 0) && (a1.length != 0))); //if one is null and the other isn't --> assertion error
 
-        if (a1.length != a2.length) {
+        if (a1.length != a2.length) { //if not the same size then return false
             return false;
         }
 
-        if (a1.length == 0) {
+        if (a1.length == 0) { // if both(previously checked that they're the same) null then return true
             return true;
         }
 
-        for (int i = 0; i < a1.length; i++) {
+        for (int i = 0; i < a1.length; i++) { //checks every element in table
 
-            if (a1[i] != a2[i]) {
+            if (a1[i] != a2[i]) { //if element not the same then return false
                 return false;
             }
         }
-        return true;
+        return true; //if all elements are the same then return true
     }
 
     /**
@@ -58,36 +58,36 @@ public final class ArrayUtils {
      * @throws AssertionError if one of the parameters is null
      */
     public static boolean equals(byte[][] a1, byte[][] a2) {
-        assert !(((a1.length == 0) && (a2.length != 0)) || ((a2.length == 0) && (a1.length != 0))) ;
+        assert !(((a1.length == 0) && (a2.length != 0)) || ((a2.length == 0) && (a1.length != 0))) ; //if number of rows in one of the arrays is null and the other isn't then assertion error
 
-        if (a1.length != a2.length) {
+        if (a1.length != a2.length) { //if number of rows not the same then return false
             return false;
         }
 
-        if (a1.length == 0) {
+        if (a1.length == 0) { //if both arrays have 0 rows then return false
             return true;
         }
 
 
-        for (int i = 0; i < a1.length; i++) {
+        for (int i = 0; i < a1.length; i++) { //for every column check the following
 
-            assert !(((a1[i].length == 0) && (a2[i].length != 0)) || ((a2[i].length == 0) && (a1[i].length != 0)));
+            assert !(((a1[i].length == 0) && (a2[i].length != 0)) || ((a2[i].length == 0) && (a1[i].length != 0))); //if number of columns in one of the arrays is null and the other isn't then assertion error
 
-            if (a1[i].length != a2[i].length) {
+            if (a1[i].length != a2[i].length) { //if number of columns not the same then return false
                 return false;
             }
 
-            if (a1[i].length == 0) {
+            if (a1[i].length == 0) { //if both arrays have 0 rows then return false
                 return true;
             }
 
-            for (int j = 0; j < a1[i].length; j++) {
-                if (a1[i][j] != a2[i][j]) {
+            for (int j = 0; j < a1[i].length; j++) { //compare every element in the array
+                if (a1[i][j] != a2[i][j]) { //if element not the same then return false
                     return false;
                 }
             }
         }
-        return true;
+        return true; //if all elements are the same then return true
     }
 
     // ==================================================================================
@@ -100,7 +100,7 @@ public final class ArrayUtils {
      * @param value (byte) - value to wrap
      * @return (byte[]) - array with one element (value)
      */
-    public static byte[] wrap(byte value) {
+    public static byte[] wrap(byte value) { //puts an integer into a single element int array
         byte[] bytes = {value};
         return bytes;
     }
@@ -118,9 +118,9 @@ public final class ArrayUtils {
      * @return (int) - Integer representation of the array
      * @throws AssertionError if the input is null or the input's length is different from 4
      */
-    public static int toInt(byte[] bytes) {
-        return Helper.fail("Not Implemented");
-    }
+    //public static int toInt(byte[] bytes) {
+
+    //}
 
     /**
      * Separate the Integer (word) to 4 bytes. The Memory layout of this integer is "Big Endian"
