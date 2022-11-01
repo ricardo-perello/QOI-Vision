@@ -101,7 +101,8 @@ public final class ArrayUtils {
      * @return (byte[]) - array with one element (value)
      */
     public static byte[] wrap(byte value) {
-        return Helper.fail("Not Implemented");
+        byte[] bytes = {value};
+        return bytes;
     }
 
     // ==================================================================================
