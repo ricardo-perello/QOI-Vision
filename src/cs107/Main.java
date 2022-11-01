@@ -18,10 +18,13 @@ public final class Main {
      */
     private Main(){}
 
+
     /**
      * Main entry point to the program
      * @param args (String[]) - Arguments passed to the program via the command line
      */
+
+
     public static void main(String[] args){
         /*
         We've listed all the test methods here.
@@ -39,10 +42,14 @@ public final class Main {
         your program
          */
 
+
+
+
+
         // ========== Test ArrayUtils ==========
         assert testWrap();
-        //assert testToInt();
-        //assert testFromInt();
+        assert testToInt();
+        assert testFromInt();
         //assert testConcatArrayBytes();
         //assert testConcatBytes();
         //assert testExtract();
