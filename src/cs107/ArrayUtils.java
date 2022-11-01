@@ -26,11 +26,12 @@ public final class ArrayUtils {
      * @throws AssertionError if one of the parameters is null
      */
     public static boolean equals(byte[] a1, byte[] a2){
+
+        if (((a1.length == 0)&&(a2.length!=0))||((a2.length == 0)&&(a1.length!= 0))){
+            assert (true);
+        }
         if (a1.length != a2.length){
             return false;
-        }
-        if (a1.length == 0){
-            return true;
         }
         for (int i = 0; i < a1.length; i++){
 
