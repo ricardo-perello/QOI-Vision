@@ -58,7 +58,7 @@ public final class ArrayUtils {
      * @throws AssertionError if one of the parameters is null
      */
     public static boolean equals(byte[][] a1, byte[][] a2) {
-        assert !(((a1.length == 0) && (a2.length != 0)) || ((a2.length == 0) && (a1.length != 0))) ; //if number of rows in one of the arrays is null and the other isn't then assertion error
+        assert !(((a1.length == 0) && (a2.length != 0)) || ((a2.length == 0) && (a1.length != 0))); //if number of rows in one of the arrays is null and the other isn't then assertion error
 
         if (a1.length != a2.length) { //if number of rows not the same then return false
             return false;
@@ -118,9 +118,25 @@ public final class ArrayUtils {
      * @return (int) - Integer representation of the array
      * @throws AssertionError if the input is null or the input's length is different from 4
      */
-    //public static int toInt(byte[] bytes) {
-
-    //}
+    public static int toInt(byte[] bytes) {
+        assert (bytes.length == 4); //make sure the size of the array is 4
+        boolean nonnull = false; //boolean that will become true when the for loop finds a non-null element
+        for (int i = 0; i < bytes.length; i++) { //checks if any value is non-null
+            if (bytes[i] != 0) {
+                nonnull = true;
+                break;
+            }
+        }
+        assert nonnull; //makes sure that the table is not null
+        int element; //temporary variable that holds element i
+        int value = 0; //variable that holds the concatenated values
+        for (int i = 0; i < 4; i++) {
+            element = bytes[i];
+            element = element << 32 - (8 * (i + 1)); //shift left to the leftmost 8-bits in a 32-bit number. then shifts left to the second leftmost 8-bits.... doesn't shift
+            value = value | element; //does a 'bitwise or' to put together the current 'value' with the new 'element'
+        }
+        return value;
+    }
 
     /**
      * Separate the Integer (word) to 4 bytes. The Memory layout of this integer is "Big Endian"
