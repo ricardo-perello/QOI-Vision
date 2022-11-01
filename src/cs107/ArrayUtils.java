@@ -146,7 +146,13 @@ public final class ArrayUtils {
      * @return (byte[]) - Big Endian representation of the integer
      */
     public static byte[] fromInt(int value) {
-        return Helper.fail("Not Implemented");
+        byte[] bytes = new byte[4]; //new array with size 4 (8 bits each)
+        int element;
+        for (int i = 0; i < 4; i++){
+            element = value;
+            bytes[i] = (byte) (element >>> 32-(8*(i+1))); // this will extract the leftmost 8 bits from the variable element, and make its way to the far right.
+        }
+        return bytes;
     }
 
     // ==================================================================================
