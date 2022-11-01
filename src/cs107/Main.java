@@ -38,7 +38,11 @@ public final class Main {
         You can always change the code of this method to change the behavior of
         your program
          */
+       // assert (false);
+        byte a1[] = {0};
+        byte a2[] = {};
 
+        System.out.println(ArrayUtils.equals(a1, a2));
         // ========== Test ArrayUtils ==========
         //assert testWrap();
         //assert testToInt();

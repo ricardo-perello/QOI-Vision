@@ -30,9 +30,8 @@ public final class ArrayUtils {
      */
     public static boolean equals(byte[] a1, byte[] a2) {
 
-        if (((a1.length == 0) && (a2.length != 0)) || ((a2.length == 0) && (a1.length != 0))) {
-            assert (true);
-        }
+        assert !(((a1.length == 0) && (a2.length != 0)) || ((a2.length == 0) && (a1.length != 0)));
+
         if (a1.length != a2.length) {
             return false;
         }
@@ -74,9 +73,7 @@ public final class ArrayUtils {
 
         for (int i = 0; i < a1.length; i++) {
 
-            if (((a1[i].length == 0) && (a2[i].length != 0)) || ((a2[i].length == 0) && (a1[i].length != 0))) {
-                assert (true);
-            }
+            assert (!((a1[i].length == 0) && (a2[i].length != 0)) || ((a2[i].length == 0) && (a1[i].length != 0)));
 
             if (a1[i].length != a2[i].length) {
                 return false;
