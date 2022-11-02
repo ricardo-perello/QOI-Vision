@@ -233,27 +233,27 @@ public final class ArrayUtils {
      *                        or one of the inner arrays of input is null
      */
     public static byte[][] imageToChannels(int[][] input) {
-        assert (input.length != 0);
+        assert (input.length != 0); //checks that input is not null
         for (int i = 0; i < input.length; i++) {
-            assert (input[i].length != 0);
-            assert (input[i].length == input[0].length);
+            assert (input[i].length != 0); //checks that the arrays inside of input are non-null
+            assert (input[i].length == input[0].length); //checks that all arrays inside of input are non-null
         }
 
-        int numElements = (input.length) * (input[0].length);
-        byte[][] channels = new byte[numElements][4];
-        int count = 0;
-        for (int i = 0; i < (input.length); i++) {
-            for (int j = 0; j < (input[i].length); j++) {
-                byte[] channel = ArrayUtils.fromInt(input[i][j]);
+        int numElements = (input.length) * (input[0].length); //length of array channels. Also, the number of elements in input.
+        byte[][] channels = new byte[numElements][4]; //array containing single pixels. These pixels are in the format of an array, where each of their elements is one of the channels RGBA
+        int count = 0; //keeps track of the number of elements that have been processed
+        for (int i = 0; i < (input.length); i++) { //for every row
+            for (int j = 0; j < (input[i].length); j++) { //for every column
+                byte[] channel = ArrayUtils.fromInt(input[i][j]); // take a singular integer pixel and separate it into its channels using "fromInt" and put it into array channel BUT THIS IS IN ARGB not RGBA
 
-                channels[count][3] = channel[0];
-                channels[count][0] = channel[1];
+                channels[count][3] = channel[0]; //makes the change from array channel (ARGB) to (RGBA)
+                channels[count][0] = channel[1]; //puts the pixel (RGBA) into the array containing all pixels
                 channels[count][1] = channel[2];
                 channels[count][2] = channel[3];
                 count++;
             }
         }
-        return channels;
+        return channels; //list of all pixels in the file with format RGBA
     }
 
     /**
