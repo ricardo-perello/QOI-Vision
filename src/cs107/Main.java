@@ -19,6 +19,7 @@ public final class Main {
     private Main(){}
 
 
+
     /**
      * Main entry point to the program
      * @param args (String[]) - Arguments passed to the program via the command line
@@ -45,7 +46,6 @@ public final class Main {
 
 
 
-
         // ========== Test ArrayUtils ==========
         assert testWrap();
         assert testToInt();
@@ -54,7 +54,7 @@ public final class Main {
         //assert testConcatBytes();
         //assert testExtract();
         //assert testPartition();
-        //assert testImageToChannels();
+        assert testImageToChannels();
         //assert testChannelsToImage();
 
         // ========== Test QOIEncoder ==========
