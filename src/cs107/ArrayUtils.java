@@ -148,9 +148,10 @@ public final class ArrayUtils {
     public static byte[] fromInt(int value) {
         byte[] bytes = new byte[4]; //new array with size 4 (8 bits each)
         int element;
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 4; i++) {
             element = value;
-            bytes[i] = (byte) (element >>> 32-(8*(i+1))); // this will extract the leftmost 8 bits from the variable element, and make its way to the far right.
+            element = element >>> 32 - (8 * (i + 1));
+            bytes[i] = (byte) (element); // this will extract the leftmost 8 bits from the variable element, and make its way to the far right.
         }
         return bytes;
     }
@@ -232,7 +233,27 @@ public final class ArrayUtils {
      *                        or one of the inner arrays of input is null
      */
     public static byte[][] imageToChannels(int[][] input) {
-        return Helper.fail("Not Implemented");
+        assert (input.length != 0);
+        for (int i = 0; i < input.length; i++) {
+            assert (input[i].length != 0);
+            assert (input[i].length == input[0].length);
+        }
+
+        int numElements = (input.length) * (input[0].length);
+        byte[][] channels = new byte[numElements][4];
+        int count = 0;
+        for (int i = 0; i < (input.length); i++) {
+            for (int j = 0; j < (input[i].length); j++) {
+                byte[] channel = ArrayUtils.fromInt(input[i][j]);
+
+                channels[count][3] = channel[0];
+                channels[count][0] = channel[1];
+                channels[count][1] = channel[2];
+                channels[count][2] = channel[3];
+                count++;
+            }
+        }
+        return channels;
     }
 
     /**
