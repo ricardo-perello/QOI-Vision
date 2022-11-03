@@ -167,7 +167,9 @@ public final class ArrayUtils {
      * @throws AssertionError if the input is null
      */
     public static byte[] concat(byte... bytes) {
-        return Helper.fail("Not Implemented");
+
+        assert (!(bytes == null));
+        return bytes;
     }
 
     /**
@@ -179,8 +181,30 @@ public final class ArrayUtils {
      *                        or one of the inner arrays of input is null.
      */
     public static byte[] concat(byte[]... tabs) {
-        return Helper.fail("Not Implemented");
+        assert (!(tabs == null)); //checks if arrays within arrays is null
+
+        int count = 0;
+        for (int i = 0; i < tabs.length; i++) {
+            assert (!(tabs[i] == null)); //checks if values in the arrays inside arrays are null
+            count = count + tabs[i].length;
+        }
+
+        byte[] concatarray = new byte[count];
+
+        int concat = 0;
+        for (int i = 0; i < tabs.length; i++) {
+
+            for (int j = 0; j < tabs[i].length; j++) {
+
+                byte temp = tabs[i][j];
+                concatarray[concat] = temp;
+                concat += 1;
+
+            }
+        }
+        return concatarray;
     }
+
 
     // ==================================================================================
     // =========================== ARRAY EXTRACTION METHODS =============================
