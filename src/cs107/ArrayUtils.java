@@ -296,7 +296,32 @@ public final class ArrayUtils {
      *                        or width is invalid
      */
     public static int[][] channelsToImage(byte[][] input, int height, int width) {
-        return Helper.fail("Not Implemented");
+        assert input.length != 0; //assert input and input[i] is not null
+        assert input.length == (height * width); //assert input size is equal to height * width
+        for (int i = 0; i < input.length; i++) {
+            assert input[i].length != 0;
+        }
+
+        byte[][] argb = new byte[input.length][4]; //array with same size as input, but argb instead od rgba
+        int[] image = new int[input.length]; //array with same length as input and argb, but the pixels are saved as integers, and not byte channels
+        int[][] imageTable = new int[height][width]; //table with pixels in integer form
+
+        int count = 0; //counts the element of the list we are on
+
+        for (int i = 0; i < input.length; i++) {
+            argb[i][0] = input[i][3]; // switches the channels from rgba to argb so the function toInt works correctly
+            argb[i][1] = input[i][0];
+            argb[i][2] = input[i][1];
+            argb[i][3] = input[i][2];
+            image[i] = toInt(argb[i]); //puts the byte channels into the image array as an integer
+        }
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                imageTable[i][j] = image[count]; //puts the integer pixels into a table with width and height
+                count++;
+            }
+        }
+        return imageTable;
     }
 
 }
