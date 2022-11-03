@@ -274,7 +274,6 @@ public final class ArrayUtils {
                 channels[count][0] = channel[1]; //puts the pixel (RGBA) into the array containing all pixels
                 channels[count][1] = channel[2];
                 channels[count][2] = channel[3];
-                
                 count++;
             }
         }
