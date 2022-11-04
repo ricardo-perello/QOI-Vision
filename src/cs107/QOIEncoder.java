@@ -1,5 +1,7 @@
 package cs107;
 
+import static cs107.QOISpecification.QOI_OP_RGB_TAG;
+
 /**
  * "Quite Ok Image" Encoder
  * @apiNote Second task of the 2022 Mini Project
@@ -65,7 +67,13 @@ public final class QOIEncoder {
      * @return (byte[]) - Encoding of the pixel using the QOI_OP_RGB schema
      */
     public static byte[] qoiOpRGB(byte[] pixel){
-        return Helper.fail("Not Implemented");
+        assert pixel.length == 4; //makes sure size of pixel is 4
+        byte [] qoiOpRGB = new byte[4]; //array containing the qoiOpRGB
+        qoiOpRGB[0] = QOI_OP_RGB_TAG; //first byte of array is used to store the tag
+        for (int i = 0; i < 3; i++){
+            qoiOpRGB[i+1] = pixel[i]; //other 3 bytes of array are used to store the RGB part of the pixel excluding Alpha
+        }
+        return qoiOpRGB;
     }
 
     /**
