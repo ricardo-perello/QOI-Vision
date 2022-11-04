@@ -32,7 +32,7 @@ public final class QOIEncoder {
 
         byte [] header = new byte[14];
         byte [] magicNum = QOISpecification.QOI_MAGIC;
-        for (int i = 0; i < 3; i++){
+        for (int i = 0; i < 4; i++){
             header[i] = magicNum[i];
         }
 
@@ -41,11 +41,11 @@ public final class QOIEncoder {
         byte [] byteHeight = ArrayUtils.fromInt(height);
         byte [] byteWidth = ArrayUtils.fromInt(width);
 
-        for (int i = 0; i < 3; i++){
-            header[i+3] = byteWidth[i];
+        for (int i = 4; i < 8; i++){
+            header[i] = byteWidth[i-4];
         }
-        for (int i = 0; i < 3; i++){
-            header[i+7] = byteHeight[i];
+        for (int i = 8; i < 12; i++){
+            header[i] = byteHeight[i-8];
         }
 
         header[12] = image.channels();

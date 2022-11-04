@@ -57,7 +57,7 @@ public final class Main {
         assert testChannelsToImage();
 
         // ========== Test QOIEncoder ==========
-        //assert testQoiHeader();
+        assert testQoiHeader();
         //assert testQoiOpRGB();
         //assert testQoiOpRGBA();
         //assert testQoiOpIndex();
