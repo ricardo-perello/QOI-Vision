@@ -1,5 +1,6 @@
 package cs107;
 
+import static cs107.QOISpecification.QOI_OP_RGBA_TAG;
 import static cs107.QOISpecification.QOI_OP_RGB_TAG;
 
 /**
@@ -83,7 +84,13 @@ public final class QOIEncoder {
      * @return (byte[]) Encoding of the pixel using the QOI_OP_RGBA schema
      */
     public static byte[] qoiOpRGBA(byte[] pixel){
-        return Helper.fail("Not Implemented");
+        assert pixel.length == 4; //makes sure size of pixel is 4
+        byte [] qoiOpRGBA = new byte[5]; //array containing the qoiOpRGBA
+        qoiOpRGBA[0] = QOI_OP_RGBA_TAG; //first byte of array is used to store the tag
+        for (int i = 0; i < 4; i++){
+            qoiOpRGBA[i+1] = pixel[i]; //other 4 bytes of array are used to store the pixel channels in RGBA
+        }
+        return qoiOpRGBA;
     }
 
     /**
