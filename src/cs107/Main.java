@@ -45,7 +45,6 @@ public final class Main {
 
 
 
-
         // ========== Test ArrayUtils ==========
         assert testWrap();
         assert testToInt();
@@ -55,7 +54,7 @@ public final class Main {
         assert testExtract();
         //assert testPartition();
         assert testImageToChannels();
-        //assert testChannelsToImage();
+        assert testChannelsToImage();
 
         // ========== Test QOIEncoder ==========
         //assert testQoiHeader();
