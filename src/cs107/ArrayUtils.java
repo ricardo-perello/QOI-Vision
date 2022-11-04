@@ -222,7 +222,17 @@ public final class ArrayUtils {
      *                        start + length should also be smaller than the input's length
      */
     public static byte[] extract(byte[] input, int start, int length) {
-        return Helper.fail("Not Implemented");
+        assert (!(input == null));
+        assert (start >= 0 && start < input.length && length >= 0 && start + length < input.length);
+
+        byte [] extracted = new byte [length];
+        int extract = 0;
+        for (int i = start; i <= length + start - 1; i++) {
+            byte temp = input[i];
+            extracted[extract] = temp;
+            extract += 1;
+        }
+        return extracted;
     }
 
     /**

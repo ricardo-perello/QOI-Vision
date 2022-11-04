@@ -51,7 +51,7 @@ public final class Main {
         assert testFromInt();
         assert testConcatArrayBytes();
         assert testConcatBytes();
-        //assert testExtract();
+        assert testExtract();
         //assert testPartition();
         assert testImageToChannels();
         assert testChannelsToImage();
