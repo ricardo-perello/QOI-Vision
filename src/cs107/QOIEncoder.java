@@ -124,7 +124,7 @@ public final class QOIEncoder {
      */
     public static byte[] qoiOpDiff(byte[] diff) {
         assert diff != null; //assert input in not null
-        assert diff.length == 3; //assert the input is lenght 3
+        assert diff.length == 3; //assert the input is length 3
         for (int i = 0; i < 3; i++) {
             assert ((diff[i] > -3) && (diff[i] < 2)); //assert the diff is between -3 < x < 2
         }
@@ -155,7 +155,28 @@ public final class QOIEncoder {
      *                        (See the handout for the constraints)
      */
     public static byte[] qoiOpLuma(byte[] diff) {
-        return Helper.fail("Not Implemented");
+        assert diff != null; //assert input in not null
+        assert diff.length == 3; //assert the input is length 3
+        assert ((diff[1] > -33)&&(diff[1] < 32)); //assert dg is between -33 < x < 32
+        assert ((diff[0]-diff[1]) > -9)&&((diff[0]-diff[1]) < 8); //assert dr' - dg' is between -9 < x < 8
+        assert ((diff[2]-diff[1]) > -9)&&((diff[2]-diff[1]) < 8); //assert db' - dg' is between -9 < x < 8
+
+        byte [] qoiOpLuma = new byte[2]; //array that will contain qoiOpLuma
+        byte tag = QOI_OP_LUMA_TAG; //byte containing tag
+
+        int g = diff[1] + 32; //int containing difference in green channel and offset by 32
+        int rg = (diff[0]-diff[1]) + 8; //int containing subtraction of diff in red and diff in green and offset by 8
+        int bg = (diff[2]-diff[1]) + 8; //int containing subtraction of diff in red and diff in green and offset by 8
+
+        byte dg = (byte) g; //byte containing difference in green channel and offset by 32
+        byte drdg = (byte) rg; //byte containing subtraction of diff in red and diff in green and offset by 8
+        drdg = (byte) (drdg << 4); //push drdg to the left by 4
+        byte dbdg = (byte) bg; //byte containing subtraction of diff in red and diff in green and offset by 8
+
+        qoiOpLuma[0] = (byte) (tag | dg); //first byte is bitwise or of tag and diff green
+        qoiOpLuma[1] = (byte) (drdg | dbdg); //second byte is bitwise or of shifted drdg and dbdg
+
+        return qoiOpLuma;
     }
 
     /**

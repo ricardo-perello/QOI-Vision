@@ -59,7 +59,7 @@ public final class Main {
         assert testQoiOpRGBA();
         assert testQoiOpIndex();
         assert testQoiOpDiff();
-        //assert testQoiOpLuma();
+        assert testQoiOpLuma();
         //assert testQoiOpRun();
         //assert testEncodeData();
 
