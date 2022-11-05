@@ -123,25 +123,24 @@ public final class QOIEncoder {
      *                        (See the handout for the constraints)
      */
     public static byte[] qoiOpDiff(byte[] diff) {
-        assert diff != null;
-        assert diff.length == 3;
+        assert diff != null; //assert input in not null
+        assert diff.length == 3; //assert the input is lenght 3
         for (int i = 0; i < 3; i++) {
-            assert ((diff[i] > -3) && (diff[i] < 2));
+            assert ((diff[i] > -3) && (diff[i] < 2)); //assert the diff is between -3 < x < 2
         }
 
-        byte[] qoiOPDiff = new byte[1];
-        byte tag = QOI_OP_DIFF_TAG;
-        tag = (byte) (tag);
-        int r = ((int) (diff[0])) + 2;
-        int g = ((int) (diff[1])) + 2;
-        int b = ((int) (diff[2])) + 2;
+        byte[] qoiOPDiff = new byte[1]; //array containing qoiOpDiff
+        byte tag = QOI_OP_DIFF_TAG; //byte containing the tag
+        int r = ((int) (diff[0])) + 2; //converts red diff into integer and adds two (as per instructions)
+        int g = ((int) (diff[1])) + 2; //converts green diff into integer and adds two (as per instructions)
+        int b = ((int) (diff[2])) + 2; //converts blue diff into integer and adds two (as per instructions)
 
 
-        byte dr = (byte) ((byte) (r) << 4);
-        byte dg = (byte) ((byte) (g) << 2);
-        byte db = (byte) (b);
+        byte dr = (byte) ((byte) (r) << 4); //converts red diff into byte again and shifts 4 to the left
+        byte dg = (byte) ((byte) (g) << 2); //converts green diff into byte again and shifts 2 to the left
+        byte db = (byte) (b); //converts blue diff into byte again.
 
-        qoiOPDiff[0] = (byte) (tag | dr | dg | db);
+        qoiOPDiff[0] = (byte) (tag | dr | dg | db); //bitwise or to join the tag with all the colour diffs
 
         return qoiOPDiff;
     }
