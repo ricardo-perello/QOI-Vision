@@ -122,14 +122,7 @@ public final class ArrayUtils {
      */
     public static int toInt(byte[] bytes) {
         assert (bytes.length == 4); //make sure the size of the array is 4
-        boolean nonnull = false; //boolean that will become true when the for loop finds a non-null element
-        for (int i = 0; i < bytes.length; i++) { //checks if any value is non-null
-            if (bytes[i] != 0) {
-                nonnull = true;
-                break;
-            }
-        }
-        assert nonnull; //makes sure that the table is not null
+        assert bytes != null; // assert byte array is not null, bytes can't be null
         int element; //temporary variable that holds element i
         int value = 0; //variable that holds the concatenated values
         for (int i = 0; i < 4; i++) {
@@ -229,7 +222,7 @@ public final class ArrayUtils {
      */
     public static byte[] extract(byte[] input, int start, int length) {
         assert input != null; //break if input is null
-        assert (start >= 0 && start < input.length && length >= 0 && start + length < input.length); //start is greater
+        assert (start >= 0 && start < input.length && length >= 0 && start + length <= input.length); //start is greater
         // than 0 and less than input length, and start + length is less than or equal to input length
 
         byte [] extracted = new byte [length]; //create new array with size length
