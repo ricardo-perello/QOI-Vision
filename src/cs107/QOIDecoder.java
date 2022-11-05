@@ -27,7 +27,39 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.1
      */
     public static int[] decodeHeader(byte[] header){
-        return Helper.fail("Not Implemented");
+
+        assert header != null; // check if header is not null
+        assert header.length == QOISpecification.HEADER_SIZE; // check if header length conforms to the specification
+
+        // check if first 4 bytes of header is equal to the magic bytes of qoif
+        for (int i = 0; i < 4 ; i++) {
+            assert header[i] == QOISpecification.QOI_MAGIC[i];
+        }
+        assert header[12] == 3 || header[12] == 4; // check that the number of channels is equal to RGB or RGBA
+        assert header[13] == 0 || header[13] == 1; // check
+
+        byte[] widthArray = ArrayUtils.extract(header, 4,4); // created array with width bytes
+        byte[] heightArray = ArrayUtils.extract(header, 8, 4); // created array with height bytes
+        byte[] channelsArray = ArrayUtils.extract(header, 12, 1); // created array with channel byte
+        byte[] colorSpaceArray = ArrayUtils.extract(header, 13, 1); // created array with colorspace byte
+        byte[] filler = {0,0,0}; // toInt method needs a table of size 4, used to concatenate
+        byte[] concatColor = ArrayUtils.concat(filler, colorSpaceArray); // concatenated colorspace array of size 4
+        byte[] concatChannel = ArrayUtils.concat(filler, channelsArray); // concatenated channel array of size 4
+
+        int width = ArrayUtils.toInt(widthArray); // convert widthArray to Int
+        int height = ArrayUtils.toInt(heightArray); // convert heightArray to Int
+        int channel = ArrayUtils.toInt(concatChannel); // convert concatenated channel array to Int
+        int colorSpace = ArrayUtils.toInt(concatColor); // convert concatenated colorspace array to Int
+
+        // insert values for decoded array
+        int [] decoded = new int[4];
+        decoded[0] = width;
+        decoded[1] = height;
+        decoded[2] = channel;
+        decoded[3] = colorSpace;
+
+        return decoded;
+
     }
 
     // ==================================================================================
