@@ -187,7 +187,13 @@ public final class QOIEncoder {
      * @throws AssertionError if count is not between 0 (exclusive) and 63 (exclusive)
      */
     public static byte[] qoiOpRun(byte count) {
-        return Helper.fail("Not Implemented");
+        assert ((count < 63)&&(count > 0)); //assert count is between 0 < x < 63
+
+        byte tag = QOI_OP_RUN_TAG; //byte containing tag
+        byte [] qoiOpRun = new byte[1]; //byte array containing qoiOpRun
+        count = (byte)(((int)count)-1); // offset count by -1
+        qoiOpRun[0] = (byte) (tag | count); //make qoiOpRun be equal to the bitwise or of tag and count
+        return qoiOpRun;
     }
 
     // ==================================================================================

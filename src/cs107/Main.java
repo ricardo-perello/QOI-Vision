@@ -60,7 +60,7 @@ public final class Main {
         assert testQoiOpIndex();
         assert testQoiOpDiff();
         assert testQoiOpLuma();
-        //assert testQoiOpRun();
+        assert testQoiOpRun();
         //assert testEncodeData();
 
         // ========== Test QOIDecoder ==========
