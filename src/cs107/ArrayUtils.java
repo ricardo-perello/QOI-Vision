@@ -1,5 +1,7 @@
 package cs107;
 
+import java.util.Arrays;
+
 /**
  * Utility class to manipulate arrays.
  *
@@ -169,7 +171,9 @@ public final class ArrayUtils {
      */
     public static byte[] concat(byte... bytes) {
 
-        assert (!(bytes == null));
+        assert (!(bytes == null)); //check that bytes is not null
+
+        //return all bytes
         return bytes;
     }
 
@@ -185,20 +189,22 @@ public final class ArrayUtils {
         assert (!(tabs == null)); //checks if arrays within arrays is null
 
         int count = 0;
+        //checks if values in the arrays inside arrays are null
         for (int i = 0; i < tabs.length; i++) {
-            assert (!(tabs[i] == null)); //checks if values in the arrays inside arrays are null
+            assert (!(tabs[i] == null));
             count = count + tabs[i].length;
         }
 
         byte[] concatarray = new byte[count];
 
         int concat = 0;
+        //stores each values in each column for i many rows inside tabs
         for (int i = 0; i < tabs.length; i++) {
 
             for (int j = 0; j < tabs[i].length; j++) {
 
                 byte temp = tabs[i][j];
-                concatarray[concat] = temp;
+                concatarray[concat] = temp; //stores the element stored in temp into concatarray
                 concat += 1;
 
             }
@@ -222,11 +228,14 @@ public final class ArrayUtils {
      *                        start + length should also be smaller than the input's length
      */
     public static byte[] extract(byte[] input, int start, int length) {
-        assert (!(input == null));
-        assert (start >= 0 && start < input.length && length >= 0 && start + length < input.length);
+        assert input != null; //break if input is null
+        assert (start >= 0 && start < input.length && length >= 0 && start + length < input.length); //start is greater
+        // than 0 and less than input length, and start + length is less than or equal to input length
 
-        byte [] extracted = new byte [length];
+        byte [] extracted = new byte [length]; //create new array with size length
         int extract = 0;
+
+        //store each value starting from start until length + start
         for (int i = start; i <= length + start - 1; i++) {
             byte temp = input[i];
             extracted[extract] = temp;
@@ -247,8 +256,42 @@ public final class ArrayUtils {
      *                        or the sum of the elements in sizes is different from the input's length
      */
     public static byte[][] partition(byte[] input, int... sizes) {
-        return Helper.fail("Not Implemented");
+        assert input != null; //check if input is not null
+        assert sizes != null; //check if sizes is not null
+
+        //Check if sum of sizes is equal to input length
+        int count = 0;
+        for (int i = 0; i < sizes.length; i++) {
+            count += sizes[i];
+        }
+        assert count == input.length;
+
+
+        byte[][] partitions = new byte[sizes.length][];
+        int endIndex = sizes[0];
+        int startIndex = 0;
+
+        for (int i = 0; i < sizes.length; i++) {
+            int j1 = 0;
+            byte[] tempArray = new byte[sizes[i]];
+            //creation of temp arrays containing their respective sizes
+            for (int j = startIndex; j < endIndex; j++) {
+                tempArray[j1] = input[j];
+                j1++;
+
+            }
+            //change start and end index until i reaches the last element of sizes
+            if (i < sizes.length -1) {
+                endIndex += sizes[i+1];
+                startIndex += sizes[i];
+
+            }
+            //storing each temporary erray in our final expected array
+            partitions[i] = tempArray;
+        }
+        return partitions;
     }
+
 
     // ==================================================================================
     // ============================== ARRAY FORMATTING METHODS ==========================
