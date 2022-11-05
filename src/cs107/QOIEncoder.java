@@ -1,5 +1,8 @@
 package cs107;
 
+import static cs107.QOISpecification.QOI_OP_RGBA_TAG;
+import static cs107.QOISpecification.QOI_OP_RGB_TAG;
+
 /**
  * "Quite Ok Image" Encoder
  * @apiNote Second task of the 2022 Mini Project
@@ -26,7 +29,32 @@ public final class QOIEncoder {
      * @return (byte[]) - Corresponding "Quite Ok Image" Header
      */
     public static byte[] qoiHeader(Helper.Image image){
-        return Helper.fail("Not Implemented");
+        assert image.data() != null; //assert image is not null
+        assert ((image.channels() == QOISpecification.RGB)||(image.channels() == QOISpecification.sRGB)); //assert that the number of channels encoding the image does not differ from the values of the constants QOISpecification.RGB and QOISpecification.RGBA
+        assert (image.color_space() == QOISpecification.sRGB )||(image.color_space() == QOISpecification.ALL); //assert that the value encoding the color space does not differ from the values QOISpecification.sRGB and QOISpecification.ALL
+
+        byte [] header = new byte[14]; //array that is going to contain the header
+        byte [] magicNum = QOISpecification.QOI_MAGIC; //array containing the magic number
+        for (int i = 0; i < 4; i++){
+            header[i] = magicNum[i]; //adding the magic number to the header array in the first 4 bytes
+        }
+
+        int height = (image.data()).length; //height of image
+        int width = (image.data())[0].length; //width of image
+        byte [] byteHeight = ArrayUtils.fromInt(height); //4 byte array containing height
+        byte [] byteWidth = ArrayUtils.fromInt(width); //4 byte array containing width
+
+        for (int i = 4; i < 8; i++){
+            header[i] = byteWidth[i-4]; //adding the width of the image to the header array to the next 4 bytes
+        }
+        for (int i = 8; i < 12; i++){
+            header[i] = byteHeight[i-8]; //adding the height of the image to the header array to the next 4 bytes
+        }
+
+        header[12] = image.channels(); //adding the number of channels that the image has to the next byte
+        header[13] = image.color_space(); //adding the color-space of the channels that the image has to the next byte
+
+        return header;
     }
 
     // ==================================================================================
@@ -40,7 +68,13 @@ public final class QOIEncoder {
      * @return (byte[]) - Encoding of the pixel using the QOI_OP_RGB schema
      */
     public static byte[] qoiOpRGB(byte[] pixel){
-        return Helper.fail("Not Implemented");
+        assert pixel.length == 4; //makes sure size of pixel is 4
+        byte [] qoiOpRGB = new byte[4]; //array containing the qoiOpRGB
+        qoiOpRGB[0] = QOI_OP_RGB_TAG; //first byte of array is used to store the tag
+        for (int i = 0; i < 3; i++){
+            qoiOpRGB[i+1] = pixel[i]; //other 3 bytes of array are used to store the RGB part of the pixel excluding Alpha
+        }
+        return qoiOpRGB;
     }
 
     /**
@@ -50,7 +84,13 @@ public final class QOIEncoder {
      * @return (byte[]) Encoding of the pixel using the QOI_OP_RGBA schema
      */
     public static byte[] qoiOpRGBA(byte[] pixel){
-        return Helper.fail("Not Implemented");
+        assert pixel.length == 4; //makes sure size of pixel is 4
+        byte [] qoiOpRGBA = new byte[5]; //array containing the qoiOpRGBA
+        qoiOpRGBA[0] = QOI_OP_RGBA_TAG; //first byte of array is used to store the tag
+        for (int i = 0; i < 4; i++){
+            qoiOpRGBA[i+1] = pixel[i]; //other 4 bytes of array are used to store the pixel channels in RGBA
+        }
+        return qoiOpRGBA;
     }
 
     /**

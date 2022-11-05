@@ -42,9 +42,6 @@ public final class Main {
         You can always change the code of this method to change the behavior of
         your program
          */
-
-
-
         // ========== Test ArrayUtils ==========
         assert testWrap();
         assert testToInt();
@@ -57,9 +54,9 @@ public final class Main {
         assert testChannelsToImage();
 
         // ========== Test QOIEncoder ==========
-        //assert testQoiHeader();
-        //assert testQoiOpRGB();
-        //assert testQoiOpRGBA();
+        assert testQoiHeader();
+        assert testQoiOpRGB();
+        assert testQoiOpRGBA();
         //assert testQoiOpIndex();
         //assert testQoiOpDiff();
         //assert testQoiOpLuma();
@@ -74,7 +71,7 @@ public final class Main {
         //assert testDecodeQoiOpLuma();
         //assert testDecodeQoiOpRun();
         //assert testDecodeData();
-        
+
 
         System.out.println("All the tests passes. Congratulations");
 
@@ -124,7 +121,6 @@ public final class Main {
     // ============================== ArrayUtils examples =========================================
     // ============================================================================================
 
-    @SuppressWarnings("unused")
     private static boolean testWrap(){
         byte a = 1;
         byte[] wrappedA = ArrayUtils.wrap(a);
@@ -132,7 +128,7 @@ public final class Main {
         return Arrays.equals(wrappedA, expected);
     }
 
-    @SuppressWarnings("unused")
+
     private static boolean testToInt(){
         byte[] array = {123, 8, 4, 7};
         int value = ArrayUtils.toInt(array);
@@ -140,7 +136,7 @@ public final class Main {
         return value == expected;
     }
 
-    @SuppressWarnings("unused")
+
     private static boolean testFromInt(){
         int value = 12345678;
         byte[] array = ArrayUtils.fromInt(value);
@@ -148,7 +144,7 @@ public final class Main {
         return Arrays.equals(array, expected);
     }
 
-    @SuppressWarnings("unused")
+
     private static boolean testConcatArrayBytes(){
         byte[] tab1 = {1, 2, 3};
         byte[] tab2 = new byte[0];
@@ -197,13 +193,13 @@ public final class Main {
 
 
 
-    @SuppressWarnings("unused")
+
     private static boolean testImageToChannels(){
         byte[][] output = ArrayUtils.imageToChannels(input);
         return Arrays.deepEquals(output, formattedInput);
     }
 
-    @SuppressWarnings("unused")
+
     private static boolean testChannelsToImage(){
         int[][]  output = ArrayUtils.channelsToImage(formattedInput, 3, 5);
         return Arrays.deepEquals(output, input);
@@ -213,7 +209,7 @@ public final class Main {
     // ============================== QOIEncoder examples =========================================
     // ============================================================================================
 
-    @SuppressWarnings("unused")
+
     private static boolean testQoiHeader(){
         Helper.Image image = Helper.generateImage(new int[32][64], QOISpecification.RGB, QOISpecification.sRGB);
         byte[] expected = {113, 111, 105, 102, 0, 0, 0, 64, 0, 0, 0, 32, 3, 0};
