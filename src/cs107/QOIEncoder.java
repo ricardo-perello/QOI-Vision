@@ -1,7 +1,6 @@
 package cs107;
 
-import static cs107.QOISpecification.QOI_OP_RGBA_TAG;
-import static cs107.QOISpecification.QOI_OP_RGB_TAG;
+import static cs107.QOISpecification.*;
 
 /**
  * "Quite Ok Image" Encoder
@@ -100,7 +99,13 @@ public final class QOIEncoder {
      * @return (byte[]) - Encoding of the index using the QOI_OP_INDEX schema
      */
     public static byte[] qoiOpIndex(byte index){
-        return Helper.fail("Not Implemented");
+        assert index >= 0; //assert index is positive
+        assert index < 64; //assert index is smaller than 64
+
+        byte [] qoiOpIndex = new byte[1]; //array that will contain the qoiOpIndex
+        byte tag = QOI_OP_INDEX_TAG << 6; //shift the tag all the way to the left inside the byte to leave space for the index
+        qoiOpIndex[0] = (byte) (tag | index); //bitwise or to join tag and index into one byte, then put this byte into qoiOpIndex array
+        return qoiOpIndex;
     }
 
     /**
