@@ -57,7 +57,7 @@ public final class Main {
         assert testQoiHeader();
         assert testQoiOpRGB();
         assert testQoiOpRGBA();
-        //assert testQoiOpIndex();
+        assert testQoiOpIndex();
         //assert testQoiOpDiff();
         //assert testQoiOpLuma();
         //assert testQoiOpRun();
