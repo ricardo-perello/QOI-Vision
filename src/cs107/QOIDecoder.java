@@ -42,9 +42,10 @@ public final class QOIDecoder {
         byte[] heightArray = ArrayUtils.extract(header, 8, 4); // created array with height bytes
         byte[] channelsArray = ArrayUtils.extract(header, 12, 1); // created array with channel byte
         byte[] colorSpaceArray = ArrayUtils.extract(header, 13, 1); // created array with colorspace byte
-        byte[] filler = {0,0,0}; // toInt method needs a table of size 4, used to concatenate
-        byte[] concatColor = ArrayUtils.concat(filler, colorSpaceArray); // concatenated colorspace array of size 4
-        byte[] concatChannel = ArrayUtils.concat(filler, channelsArray); // concatenated channel array of size 4
+        byte[] concatColor = ArrayUtils.concat(new byte[]{0,0,0}, colorSpaceArray); // concatenated colorspace array
+        // of size 4, as toInt needs a table size of 4
+        byte[] concatChannel = ArrayUtils.concat(new byte[]{0,0,0}, channelsArray); // concatenated channel array of
+        // size 4, as toInt needs a table size of 4
 
         int width = ArrayUtils.toInt(widthArray); // convert widthArray to Int
         int height = ArrayUtils.toInt(heightArray); // convert heightArray to Int
@@ -52,13 +53,8 @@ public final class QOIDecoder {
         int colorSpace = ArrayUtils.toInt(concatColor); // convert concatenated colorspace array to Int
 
         // insert values for decoded array
-        int [] decoded = new int[4];
-        decoded[0] = width;
-        decoded[1] = height;
-        decoded[2] = channel;
-        decoded[3] = colorSpace;
+        return new int[]{width, height, channel, colorSpace};
 
-        return decoded;
 
     }
 
@@ -77,8 +73,26 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.2.1
      */
     public static int decodeQoiOpRGB(byte[][] buffer, byte[] input, byte alpha, int position, int idx){
-        return Helper.fail("Not Implemented");
+        assert buffer != null;
+        assert input != null;
+        assert position < buffer.length;
+        assert idx < input.length;
+
+        byte[] rgba = new byte[4];
+
+        int count = 0;
+        // insert rgb into array
+        for (int i = idx; i < idx + 3; i++) {
+            rgba[i - idx] = input[i];
+            count++;
+        }
+        rgba[3] = alpha; // add alpha to position 3
+
+        buffer[position] = rgba; // insert array rgb at location "position"
+
+        return count; // return the count of rgb, which is always 3
     }
+
 
     /**
      * Store the pixel in the buffer and return the number of consumed bytes
@@ -90,7 +104,23 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.2.2
      */
     public static int decodeQoiOpRGBA(byte[][] buffer, byte[] input, int position, int idx){
-        return Helper.fail("Not Implemented");
+        assert buffer != null;
+        assert input != null;
+        assert position < buffer.length;
+        assert idx < input.length;
+
+        byte[] rgba = new byte[4];
+
+        int count = 0;
+        // insert rgb into array
+        for (int i = idx; i < idx + 4; i++) {
+            rgba[i - idx] = input[i];
+            count++;
+        }
+
+        buffer[position] = rgba; // insert array rgb at location "position"
+
+        return count; // return the count of rgb, which is always 4
     }
 
     /**
@@ -101,6 +131,18 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.2.4
      */
     public static byte[] decodeQoiOpDiff(byte[] previousPixel, byte chunk){
+//        assert previousPixel != null;
+//        assert previousPixel.length == 4;
+//        assert chunk > 63; // check if it's greater than 63 as 01_00_00_00 has a byte value of 63. If the first byte is
+//        // 1 then it makes the value negative, hence checking for > 63 is all that is needed
+//
+//        int diff = 128 - (int) chunk;
+//
+//        for (int i = 0; i < previousPixel.length; i++) {
+//            previousPixel[i] += diff;
+//
+//        }
+//        return previousPixel;
         return Helper.fail("Not Implemented");
     }
 
