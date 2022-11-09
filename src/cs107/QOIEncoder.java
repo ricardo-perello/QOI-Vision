@@ -1,5 +1,7 @@
 package cs107;
 
+import java.util.ArrayList;
+
 import static cs107.QOISpecification.*;
 
 /**
@@ -122,7 +124,7 @@ public final class QOIEncoder {
      * @throws AssertionError if diff doesn't respect the constraints or diff's length is not 3
      *                        (See the handout for the constraints)
      */
-    public static byte[] qoiOpDiff(byte[] diff) {
+    public static byte[] qoiOpDiff(byte[] diff){
         assert diff != null; //assert input in not null
         assert diff.length == 3; //assert the input is length 3
         for (int i = 0; i < 3; i++) {
@@ -208,7 +210,94 @@ public final class QOIEncoder {
      * @return (byte[]) - "Quite Ok Image" representation of the image
      */
     public static byte[] encodeData(byte[][] image) {
-        return Helper.fail("Not Implemented");
+
+        assert image != null;
+        //assert picture != null DON'T KNOW WHAT PICTURE IS
+        for (int i = 0; i < image.length; i++) {
+            assert image[i].length == 4; //assert all pixels are size 4
+        }
+
+
+        byte[] prevPixel = QOISpecification.START_PIXEL; //first pixel is always constant (as per instructions)
+        byte[][] hash = new byte[64][4]; //initialization of hash table
+        int count; //used for qoiOpRun
+        ArrayList<Byte> encodedata = new ArrayList<>();//arrayList where the encoded data is going to be stored
+
+
+
+
+        for (int i = 0; i < image.length; i++) { //for every pixel
+
+
+            /*===============================
+            ======== previous pixel =========
+            =================================*/
+
+            if (i != 0){
+                prevPixel = image[i-1];
+            }
+
+            /*===============================
+            ======== hash index =========
+            =================================*/
+
+            byte pixHash = QOISpecification.hash(image[i]);
+
+            /*================================
+            ==difference between two pixels ==
+            =================================*/
+
+            byte [] diff = new byte[4];
+            for (int j = 0; j < 3; j++){
+                diff[j] = (byte) (image[i][j] - prevPixel[j]);
+            }
+
+          /*===========================
+            ======== qoiOpRun =========
+            ===========================*/
+
+            if (image[i] == prevPixel){
+                count = 0; //restart count
+                while ((image[i] == prevPixel) && (count < 62) && (count >= 0) && ((i == image.length-1))) {
+                    //while the pixel equals the previous pixel and count is less than 62 and the pixel that is being compared is not the last pixel.
+                    i++; //next column
+                    count++; //add one to the qoiOpRun count
+                }
+                if (i == image.length - 1) { //if the compared pixel was the last pixel, the while loop breaks and the if activates to add the last pixel into the qoiOpRun
+                    count++;
+                }
+                encodedata.add((qoiOpRun((byte)count))[0]); //add qoiOpRun byte to the list
+                continue;
+            }
+
+            /*===========================
+            ======== qoiOpIndex =========
+            ===========================*/
+
+            else if (hash[pixHash] == image[i]){
+                encodedata.add((qoiOpIndex(pixHash))[0]);
+            }
+            else if (hash[pixHash] != image[i]){
+                hash[pixHash] = image[i];
+            }
+
+
+        /*===========================
+         ======== qoiOpDiff =========
+        ===========================*/
+
+            else if ((diff[3] == 0)&&(((diff[0]) > -3)&&((diff[0]) < 2))&&(((diff[1]) > -3)&&((diff[1]) < 2))&&(((diff[2]) > -3)&&((diff[2]) < 2))){
+                encodedata.add(qoiOpDiff(diff)[0]);
+            }
+
+
+        }
+
+        byte [] encodeData = new byte[encodedata.size()];
+        for (int z = 0; z < encodedata.size(); z++){
+            encodeData[z] = encodedata.get(z);
+        }
+        return encodeData;
     }
 
     /**
