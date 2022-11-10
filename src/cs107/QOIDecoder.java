@@ -131,19 +131,34 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.2.4
      */
     public static byte[] decodeQoiOpDiff(byte[] previousPixel, byte chunk){
-//        assert previousPixel != null;
-//        assert previousPixel.length == 4;
-//        assert chunk > 63; // check if it's greater than 63 as 01_00_00_00 has a byte value of 63. If the first byte is
-//        // 1 then it makes the value negative, hence checking for > 63 is all that is needed
-//
-//        int diff = 128 - (int) chunk;
-//
-//        for (int i = 0; i < previousPixel.length; i++) {
-//            previousPixel[i] += diff;
-//
-//        }
-//        return previousPixel;
-        return Helper.fail("Not Implemented");
+        assert previousPixel != null;
+        assert previousPixel.length == 4;
+        assert chunk > 63; // check if it's greater than 63 as 01_00_00_00 has a byte value of 63. If the first byte is
+        // 1 then it makes the value negative, hence checking for > 63 is all that is needed
+
+        int r, g, b;
+        byte dred = 0, dgreen = 0, dblue = 0;
+
+        // >> removes last 4 numbers and 0b11 is the mask to retrieve the first 2 digits
+        r = 0b11 & (chunk >> 4);
+        dred = ((byte) (r - 2));
+
+        // >> removes last 2 numbers and 0b11 is the mask to retrieve the middle 2 digits
+        g = 0b11 & (chunk >> 2);
+        dgreen = ((byte) (g - 2));
+
+        // >> removes nothing and 0b11 is the mask to retrieve the last 2 digits
+        b = 0b11 & chunk;
+        dblue = ((byte) (b - 2));
+
+        byte[] currentPixel = new byte[4];
+        currentPixel[0] = (byte) (previousPixel[0] + dred);
+        currentPixel[1] = (byte) (previousPixel[1] + dgreen);
+        currentPixel[2] = (byte) (previousPixel[2] + dblue);
+        currentPixel[3] = previousPixel[3];
+
+        return currentPixel;
+
     }
 
     /**
