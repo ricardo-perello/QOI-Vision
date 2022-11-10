@@ -214,7 +214,24 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.2.6
      */
     public static int decodeQoiOpRun(byte[][] buffer, byte[] pixel, byte chunk, int position){
-        return Helper.fail("Not Implemented");
+        assert buffer != null; //check buffer is not null
+        assert pixel != null; //check pixel is not null
+        assert pixel.length == 4;//check that pixel length is 4
+        assert position <= buffer.length;//check that position is less than the length of our buffer array
+
+        //check that buffer can return the length of the pixel
+        for (int i = 0; i < buffer.length; i++) {
+            assert pixel.length == buffer[i].length;
+        }
+
+        //gets the last six bits from the binary representation of chunk to get the number of pixels to modify
+        byte nPixel = (byte) (chunk & 0b11_11_11);
+
+        //insert pixel in buffer for nPixel times
+        for (int i = position; i <= position + nPixel; i++) {
+            buffer[i] = pixel;
+        }
+        return nPixel;
     }
 
     // ==================================================================================
