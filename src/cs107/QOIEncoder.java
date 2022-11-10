@@ -189,7 +189,7 @@ public final class QOIEncoder {
      * @throws AssertionError if count is not between 0 (exclusive) and 63 (exclusive)
      */
     public static byte[] qoiOpRun(byte count) {
-        assert ((count < 63) && (count >= 0)); //assert count is between 0 < x < 63
+        assert ((count < 63) && (count > 0)); //assert count is between 0 < x < 63
 
         byte tag = QOI_OP_RUN_TAG; //byte containing tag
         byte[] qoiOpRun = new byte[1]; //byte array containing qoiOpRun
@@ -264,7 +264,7 @@ public final class QOIEncoder {
 
             if (ArrayUtils.equals(image[i], prevPixel)) { //if pixel equals previous pixel
                 count = 0; //restart count
-                while ((ArrayUtils.equals(image[i], prevPixel)) && (count < 62) && (count >= 0) && ((i != image.length - 1))) {
+                while ((ArrayUtils.equals(image[i], prevPixel)) && (count < 62) && (count >= 0) && (i != image.length - 1)) {
                     //while the pixel equals the previous pixel and count is less than 62 and the pixel that is being compared is not the last pixel.
                     i++; //next column
                     count++; //add one to the qoiOpRun count
@@ -273,8 +273,10 @@ public final class QOIEncoder {
                     i++;
                     count++;
                 }
-                encodedata.add((qoiOpRun((byte) count))[0]); //add qoiOpRun byte to the list
-                i--; //decrease i by 1 to fix bug that i don't really understand
+                if (count != 0){
+                    encodedata.add((qoiOpRun((byte) count))[0]); //add qoiOpRun byte to the list
+                }
+                i--;//decrease i by 1 to fix bug that I don't really understand
                 run = true; //boolean run to true which will prevent the hash value for this pixel from being saved into the hash table
             }
 
