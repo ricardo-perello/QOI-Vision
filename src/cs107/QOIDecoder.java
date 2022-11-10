@@ -169,7 +169,39 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.2.5
      */
     public static byte[] decodeQoiOpLuma(byte[] previousPixel, byte[] data){
-        return Helper.fail("Not Implemented");
+
+        assert (previousPixel != null); //check if previous pixel is not null
+        assert (data != null); //check if data is not null
+        assert (previousPixel.length == 4); //check the length of previous pixel is 4
+        assert (data[0] <= -65); // luma is between -128 and -65 as the tag is 0b10_00_00_00, and it is less than -65 as
+        // because the OP_Run_tag has 11 in the beginning, hence -65 is the max
+
+        int r, g, b;
+        byte dred = 0, dgreen = 0, dblue = 0;
+
+        //need 6 bits, hence mask is 6 1's, masks it with the first byte and retrieves the 6 green bits
+        g = data[0] & 0b11_11_11;
+        //offset by 32
+        dgreen = ((byte) (g - 32));
+
+        //need first 4 bits from second byte in array as those bits represent red
+        r = 0b11_11 & (data[1] >> 4);
+        //dred is r + the difference in green - the offset
+        dred = ((byte) (r + dgreen - 8));
+
+        //need last 4 bits from second byte array, those last 4 bits represent blue
+        b = 0b11_11 & (data[1]);
+        //dblue is b + the difference in green - the offset
+        dblue = ((byte) (b + dgreen - 8));
+
+        byte[] currentPixel = new byte[4];
+
+        currentPixel[0] = (byte) (previousPixel[0] + dred);
+        currentPixel[1] = (byte) (previousPixel[1] + dgreen);
+        currentPixel[2] = (byte) (previousPixel[2] + dblue);
+        currentPixel[3] = previousPixel[3];
+
+        return currentPixel;
     }
 
     /**

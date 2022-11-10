@@ -69,7 +69,7 @@ public final class Main {
         assert testDecodeQoiOpRGB();
         assert testDecodeQoiOpRGBA();
         assert testDecodeQoiOpDiff();
-        //assert testDecodeQoiOpLuma();
+        assert testDecodeQoiOpLuma();
         //assert testDecodeQoiOpRun();
         //assert testDecodeData();
 
