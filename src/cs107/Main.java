@@ -75,8 +75,8 @@ public final class Main {
 
 
         System.out.println("All the tests passes. Congratulations");
-        //pngToQoi("references/qoi_encode_test.png","qoi_encode_test.qoi");
-        //Diff.diff("references/qoi_encode_test.qoi","res/qoi_encode_test.qoi");
+        pngToQoi("references/dice.png","dice.qoi");
+        Diff.diff("references/dice.qoi","res/dice.qoi");
 
     }
 
