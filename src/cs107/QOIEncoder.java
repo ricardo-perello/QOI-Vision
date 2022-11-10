@@ -1,5 +1,7 @@
 package cs107;
 
+import java.util.ArrayList;
+
 import static cs107.QOISpecification.*;
 
 /**
@@ -122,7 +124,7 @@ public final class QOIEncoder {
      * @throws AssertionError if diff doesn't respect the constraints or diff's length is not 3
      *                        (See the handout for the constraints)
      */
-    public static byte[] qoiOpDiff(byte[] diff) {
+    public static byte[] qoiOpDiff(byte[] diff){
         assert diff != null; //assert input in not null
         assert diff.length == 3; //assert the input is length 3
         for (int i = 0; i < 3; i++) {
@@ -187,7 +189,7 @@ public final class QOIEncoder {
      * @throws AssertionError if count is not between 0 (exclusive) and 63 (exclusive)
      */
     public static byte[] qoiOpRun(byte count) {
-        assert ((count < 63)&&(count > 0)); //assert count is between 0 < x < 63
+        assert ((count < 63)&&(count >= 0)); //assert count is between 0 < x < 63
 
         byte tag = QOI_OP_RUN_TAG; //byte containing tag
         byte [] qoiOpRun = new byte[1]; //byte array containing qoiOpRun
@@ -208,7 +210,140 @@ public final class QOIEncoder {
      * @return (byte[]) - "Quite Ok Image" representation of the image
      */
     public static byte[] encodeData(byte[][] image) {
-        return Helper.fail("Not Implemented");
+
+        assert image != null;
+        //assert picture != null DON'T KNOW WHAT PICTURE IS
+        for (int i = 0; i < image.length; i++) {
+            assert image[i].length == 4; //assert all pixels are size 4
+        }
+
+
+        byte[] prevPixel = QOISpecification.START_PIXEL; //first pixel is always constant (as per instructions)
+        byte[][] hash = new byte[64][4]; //definition of hash table
+        int count; //used for qoiOpRun
+        boolean run = false; //boolean that will become true if opRun is used for a pixel and will cause the hash not to be saved into the hash table
+        ArrayList<Byte> encodedata = new ArrayList<>();//arrayList where the encoded data is going to be stored
+
+
+
+
+        for (int i = 0; i < image.length; i++) { //for every pixel
+
+
+            /*===============================
+            ======== previous pixel =========
+            =================================*/
+
+            if (i != 0){ //if not the first pixel (keeps value from constant before)
+                prevPixel = image[i-1]; //prevPixel becomes pixel from last repetition
+            }
+
+            /*===============================
+            ======== hash index =========
+            =================================*/
+
+            byte pixHash = QOISpecification.hash(image[i]); //produces a hash value from a pixel
+
+            /*================================
+            ==difference between two pixels ==
+            =================================*/
+
+            byte [] diff = new byte[4]; //def of array where diff is stored
+            byte [] diffLuma = new byte[3]; //def of array where diffLuma is stored
+            for (int j = 0; j < 4; j++){ //for every element of diff, diff[j] equals pixel channel j minus prevPixel channel j
+                diff[j] = (byte) (image[i][j] - prevPixel[j]);
+            }
+            if (diff[3] == 0){ //if difference in alpha channel is 0
+                for (int j = 0; j < 3; j++){
+                    diffLuma[j] = diff[j]; //shorter version of diff, excluding diff in alpha
+                }
+            }
+
+          /*===========================
+            ======== qoiOpRun =========
+            ===========================*/
+
+            if (ArrayUtils.equals(image[i], prevPixel)){ //if pixel equals previous pixel
+                count = 0; //restart count
+                while ((ArrayUtils.equals(image[i], prevPixel)) && (count < 62) && (count >= 0) && ((i != image.length-1))) {
+                    //while the pixel equals the previous pixel and count is less than 62 and the pixel that is being compared is not the last pixel.
+                    i++; //next column
+                    count++; //add one to the qoiOpRun count
+                }
+                if (i == image.length - 1) { //if the compared pixel was the last pixel, the while loop breaks and the if activates to add the last pixel into the qoiOpRun
+                    i++;
+                    count++;
+                }
+                encodedata.add((qoiOpRun((byte)count))[0]); //add qoiOpRun byte to the list
+                i--; //decrease i by 1 to fix bug that i don't really understand
+                run = true; //boolean run to true which will prevent the hash value for this pixel from being saved into the hash table
+            }
+
+            /*===========================
+            ======== qoiOpIndex =========
+            ===========================*/
+
+            else if (ArrayUtils.equals(hash[pixHash], image[i])){ //else if pixel equals pixel stored at the indicated index in the hash table
+                encodedata.add((qoiOpIndex(pixHash))[0]); //add one byte of qoiOpIndex to encode data
+            }
+
+
+
+        /*===========================
+         ======== qoiOpDiff =========
+        ===========================*/
+
+            else if ((diff[3] == 0)&&(((diff[0]) > -3)&&((diff[0]) < 2))&&(((diff[1]) > -3)&&((diff[1]) < 2))&&(((diff[2]) > -3)&&((diff[2]) < 2))){
+                //else if diff in alpha is 0, and diffs in other channels are between -3 < x < 2
+                encodedata.add(qoiOpDiff(diffLuma)[0]); //add one byte of qoiOpDiff to encode data (I used diffLuma because the alpha diff isn't stored in the byte as it is 0)
+            }
+
+
+            /*===============================
+            ========    qoiOpLuma   =========
+            =================================*/
+
+            else if ((diff[3] == 0)&&((diffLuma[1] > -33)&&(diffLuma[1] < 32))&&((diff[0]-diff[1]) > -9)&&((diff[0]-diff[1]) < 8)&&(((diff[2]-diff[1]) > -9)&&((diff[2]-diff[1]) < 8))){
+                //else if diff in alpha = 0, and diff green is between -33 < x < 32, and difference between diff green and red(blue) is between -9 < x < 8
+                encodedata.add(qoiOpLuma(diffLuma)[0]); //add two bytes of qoiOpLuma to encode data
+                encodedata.add(qoiOpLuma(diffLuma)[1]);
+
+            }
+
+            /*===============================
+            ========    qoiOpRGB   =========
+            =================================*/
+            else if ((diff[3] == 0)){ //else if diff alpha = 0
+                for (int j = 0; j < 4; j++){
+                    encodedata.add(qoiOpRGB(image[i])[j]); //add 4 bytes of qoiOpRGB to encode data
+                }
+            }
+
+            /*===============================
+            ========    qoiOpRGBA   =========
+            =================================*/
+
+            else { //else if diff alpha is not 0
+                for (int j = 0; j < 5; j++){
+                    encodedata.add(qoiOpRGBA(image[i])[j]); //add 5 bytes of qoiOpRGBA to encode data
+                }
+            }
+
+             /*===============================
+            ====== adding pixel to hash ======
+            =================================*/
+
+            if ((!(ArrayUtils.equals(hash[pixHash], image[i])))&&(!run)) { //if the pixel isn't stored in the hash table yet, and process OpRun hasn't happened, then save pixel in the hash table at position pixHash
+                hash[pixHash] = image[i];
+            }
+
+        }
+
+        byte [] encodeData = new byte[encodedata.size()]; //translate the arraylist into an array in order to return the array
+        for (int z = 0; z < encodedata.size(); z++){
+            encodeData[z] = encodedata.get(z);
+        }
+        return encodeData;
     }
 
     /**

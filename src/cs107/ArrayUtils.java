@@ -279,7 +279,7 @@ public final class ArrayUtils {
                 startIndex += sizes[i];
 
             }
-            //storing each temporary erray in our final expected array
+            //storing each temporary array in our final expected array
             partitions[i] = tempArray;
         }
         return partitions;

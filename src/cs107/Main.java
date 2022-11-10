@@ -1,5 +1,6 @@
 package cs107;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -61,19 +62,21 @@ public final class Main {
         assert testQoiOpDiff();
         assert testQoiOpLuma();
         assert testQoiOpRun();
-        //assert testEncodeData();
+        assert testEncodeData();
 
         // ========== Test QOIDecoder ==========
         assert testDecodeHeader();
         assert testDecodeQoiOpRGB();
         assert testDecodeQoiOpRGBA();
-        assert testDecodeQoiOpDiff();
+        //assert testDecodeQoiOpDiff();
         //assert testDecodeQoiOpLuma();
         //assert testDecodeQoiOpRun();
         //assert testDecodeData();
 
 
         System.out.println("All the tests passes. Congratulations");
+        //pngToQoi("references/qoi_encode_test.png","qoi_encode_test.qoi");
+        //Diff.diff("references/qoi_encode_test.qoi","res/qoi_encode_test.qoi");
 
     }
 
