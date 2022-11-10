@@ -220,8 +220,8 @@ public final class QOIDecoder {
         assert position <= buffer.length;//check that position is less than the length of our buffer array
 
         //check that buffer can return the length of the pixel
-        for (int i = 0; i < buffer.length; i++) {
-            assert pixel.length == buffer[i].length;
+        for (byte[] bytes : buffer) {
+            assert pixel.length == bytes.length;
         }
 
         //gets the last six bits from the binary representation of chunk to get the number of pixels to modify

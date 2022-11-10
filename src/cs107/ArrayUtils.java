@@ -304,17 +304,17 @@ public final class ArrayUtils {
      */
     public static byte[][] imageToChannels(int[][] input) {
         assert (input.length != 0); //checks that input is not null
-        for (int i = 0; i < input.length; i++) {
-            assert (input[i].length != 0); //checks that the arrays inside of input are non-null
-            assert (input[i].length == input[0].length); //checks that all arrays inside of input are non-null
+        for (int[] ints : input) {
+            assert (ints.length != 0); //checks that the arrays inside of input are non-null
+            assert (ints.length == input[0].length); //checks that all arrays inside of input are non-null
         }
 
         int numElements = (input.length) * (input[0].length); //length of array channels. Also, the number of elements in input.
         byte[][] channels = new byte[numElements][4]; //array containing single pixels. These pixels are in the format of an array, where each of their elements is one of the channels RGBA
         int count = 0; //keeps track of the number of elements that have been processed
-        for (int i = 0; i < (input.length); i++) { //for every row
-            for (int j = 0; j < (input[i].length); j++) { //for every column
-                byte[] channel = ArrayUtils.fromInt(input[i][j]); // take a singular integer pixel and separate it into its channels using "fromInt" and put it into array channel BUT THIS IS IN ARGB not RGBA
+        for (int[] ints : input) { //for every row
+            for (int anInt : ints) { //for every column
+                byte[] channel = ArrayUtils.fromInt(anInt); // take a singular integer pixel and separate it into its channels using "fromInt" and put it into array channel BUT THIS IS IN ARGB not RGBA
 
                 channels[count][3] = channel[0]; //makes the change from array channel (ARGB) to (RGBA)
                 channels[count][0] = channel[1]; //puts the pixel (RGBA) into the array containing all pixels
@@ -344,8 +344,8 @@ public final class ArrayUtils {
     public static int[][] channelsToImage(byte[][] input, int height, int width) {
         assert input.length != 0; //assert input and input[i] is not null
         assert input.length == (height * width); //assert input size is equal to height * width
-        for (int i = 0; i < input.length; i++) {
-            assert input[i].length != 0;
+        for (byte[] bytes : input) {
+            assert bytes.length != 0;
         }
 
         byte[][] argb = new byte[input.length][4]; //array with same size as input, but argb instead od rgba
