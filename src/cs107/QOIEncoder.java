@@ -34,7 +34,7 @@ public final class QOIEncoder {
      */
     public static byte[] qoiHeader(Helper.Image image) {
         assert image.data() != null; //assert image is not null
-        //assert ((image.channels() == QOISpecification.RGB) || (image.channels() == QOISpecification.sRGB)); //assert that the number of channels encoding the image does not differ from the values of the constants QOISpecification.RGB and QOISpecification.RGBA
+        assert ((image.channels() == QOISpecification.RGB) || (image.channels() == QOISpecification.RGBA)); //assert that the number of channels encoding the image does not differ from the values of the constants QOISpecification.RGB and QOISpecification.RGBA
         assert (image.color_space() == QOISpecification.sRGB) || (image.color_space() == QOISpecification.ALL); //assert that the value encoding the color space does not differ from the values QOISpecification.sRGB and QOISpecification.ALL
 
         byte[] header = new byte[14]; //array that is going to contain the header
@@ -241,7 +241,7 @@ public final class QOIEncoder {
             =================================*/
 
             byte pixHash = QOISpecification.hash(image[i]); //produces a hash value from a pixel
-            run = false;
+            run = false; //restart run check boolean
 
             /*================================
             ==difference between two pixels ==
@@ -356,7 +356,7 @@ public final class QOIEncoder {
      * TO CREATE THE FILE, YOU'LL NEED TO CALL Helper::write
      */
     public static byte[] qoiFile(Helper.Image image) {
-        assert image != null;
+        assert image != null; //assert image is not null
 
         byte[] header = qoiHeader(image);
         byte [][] imageToChannels = ArrayUtils.imageToChannels(image.data());
