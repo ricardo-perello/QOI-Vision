@@ -218,9 +218,9 @@ public final class QOIEncoder {
         }
 
 
-        byte[] prevPixel = QOISpecification.START_PIXEL; //first pixel is always constant (as per instructions)
+        byte[] prevPixel = START_PIXEL; //first pixel is always constant (as per instructions)
         byte[][] hash = new byte[64][4]; //definition of hash table
-        int count; //used for qoiOpRun
+        int count = 0; //used for qoiOpRun
         boolean run; //boolean that will become true if opRun is used for a pixel and will cause the hash not to be saved into the hash table
         ArrayList<Byte> encodedata = new ArrayList<>();//arrayList where the encoded data is going to be stored
 
@@ -240,7 +240,7 @@ public final class QOIEncoder {
             ======== hash index =========
             =================================*/
 
-            byte pixHash = QOISpecification.hash(image[i]); //produces a hash value from a pixel
+            byte pixHash = hash(image[i]); //produces a hash value from a pixel
             run = false; //restart run check boolean
 
             /*================================
@@ -263,21 +263,14 @@ public final class QOIEncoder {
             ===========================*/
 
             if (ArrayUtils.equals(image[i], prevPixel)) { //if pixel equals previous pixel
-                count = 0; //restart count
-                while ((ArrayUtils.equals(image[i], prevPixel)) && (count < 62) && (count >= 0) && (i != image.length - 1)) {
-                    //while the pixel equals the previous pixel and count is less than 62 and the pixel that is being compared is not the last pixel.
-                    i++; //next column
-                    count++; //add one to the qoiOpRun count
+                ++count; //increase count by one
+                if (((count == 62) || (i == image.length - 1))||((!ArrayUtils.equals(image[i], image[i + 1])) && (count != 0))) {
+                    //if count equals 62 or pixel is the last pixel or (pixel isn't equal to next pixel and count is not 0)
+                    encodedata.add(qoiOpRun((byte) count)[0]); //add one byte of qoiOpRun to encode data
+                    count = 0; //reset count
                 }
-                if (i == image.length - 1) { //if the compared pixel was the last pixel, the while loop breaks and the if activates to add the last pixel into the qoiOpRun
-                    i++;
-                    count++;
-                }
-                if (count != 0){
-                    encodedata.add((qoiOpRun((byte) count))[0]); //add qoiOpRun byte to the list
-                }
-                i--;//decrease i by 1 to fix bug that I don't really understand
-                run = true; //boolean run to true which will prevent the hash value for this pixel from being saved into the hash table
+                run = true; //set run to true to avoid saving hash index to hash table
+
             }
 
             /*===========================
@@ -361,13 +354,13 @@ public final class QOIEncoder {
         assert image != null; //assert image is not null
 
         byte[] header = qoiHeader(image);
-        byte [][] imageToChannels = ArrayUtils.imageToChannels(image.data());
+        byte[][] imageToChannels = ArrayUtils.imageToChannels(image.data());
         byte[] encodeData = encodeData(imageToChannels);
         byte[] eof = QOISpecification.QOI_EOF;
 
-        byte [] qoiFile = ArrayUtils.concat(header, encodeData, eof);
+        byte[] qoiFile = ArrayUtils.concat(header, encodeData, eof);
 
         return qoiFile;
-   }
+    }
 
 }

@@ -75,8 +75,8 @@ public final class Main {
 
 
         System.out.println("All the tests passes. Congratulations");
-        pngToQoi("references/dice.png","dice.qoi");
-        Diff.diff("references/dice.qoi","res/dice.qoi");
+        pngToQoi("references/beach.png","beach.qoi");
+        Diff.diff("references/beach.qoi","res/beach.qoi");
 
     }
 
