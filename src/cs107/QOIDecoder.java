@@ -265,7 +265,28 @@ public final class QOIDecoder {
      * @throws AssertionError if content is null
      */
     public static Image decodeQoiFile(byte[] content){
-        return Helper.fail("Not Implemented");
+        assert content != null; //assert content isn't null
+
+        byte [][]  partitionArray = ArrayUtils.partition(content, 14, content.length-2); //byte table partitionArray containing the partition of array content into smaller segments.
+        byte [] eof = partitionArray[2]; //end of file data equals partitionArray[2]
+        for (int i = 0; i <= 7; i++){
+            assert eof[i] == QOISpecification.QOI_EOF[i]; //assert eof is equal to the expected eof
+        }
+
+        byte [] header = partitionArray[0]; //header equals first row of partitionArray
+        byte [] rawData = partitionArray[1]; //rawData equals second row of partition array
+
+
+        int [] decodeHeader = decodeHeader(header); //transforms encoded header into something readable by us
+        int width = decodeHeader[0]; //width equals first element of header
+        int height = decodeHeader[1]; //height equals second element of header
+        byte numChannels = (byte) decodeHeader[2]; //the number of channels equals third element of header
+        byte colorSpace = (byte) decodeHeader[3]; //the color space equals fourth element of header
+
+        byte [][] data = decodeData(rawData, width, height); //making a list of byte pixels
+        int [][] decodedPixels = ArrayUtils.channelsToImage(data, height, width); //making a table of int pixels
+        return Helper.generateImage(decodedPixels, numChannels, colorSpace); //generating the image using the table of int pixels, the number of channels and the color space
+
     }
 
 }
