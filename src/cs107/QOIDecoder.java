@@ -4,9 +4,10 @@ import static cs107.Helper.Image;
 
 /**
  * "Quite Ok Image" Decoder
- * @apiNote Third task of the 2022 Mini Project
+ *
  * @author Hamza REMMAL (hamza.remmal@epfl.ch)
  * @version 1.3
+ * @apiNote Third task of the 2022 Mini Project
  * @since 1.0
  */
 public final class QOIDecoder {
@@ -14,7 +15,8 @@ public final class QOIDecoder {
     /**
      * DO NOT CHANGE THIS, MORE ON THAT IN WEEK 7.
      */
-    private QOIDecoder(){}
+    private QOIDecoder() {
+    }
 
     // ==================================================================================
     // =========================== QUITE OK IMAGE HEADER ================================
@@ -22,29 +24,30 @@ public final class QOIDecoder {
 
     /**
      * Extract useful information from the "Quite Ok Image" header
+     *
      * @param header (byte[]) - A "Quite Ok Image" header
      * @return (int[]) - Array such as its content is {width, height, channels, color space}
      * @throws AssertionError See handouts section 6.1
      */
-    public static int[] decodeHeader(byte[] header){
+    public static int[] decodeHeader(byte[] header) {
 
         assert header != null; // check if header is not null
         assert header.length == QOISpecification.HEADER_SIZE; // check if header length conforms to the specification
 
         // check if first 4 bytes of header is equal to the magic bytes of qoif
-        for (int i = 0; i < 4 ; i++) {
+        for (int i = 0; i < 4; i++) {
             assert header[i] == QOISpecification.QOI_MAGIC[i];
         }
         assert header[12] == 3 || header[12] == 4; // check that the number of channels is equal to RGB or RGBA
         assert header[13] == 0 || header[13] == 1; // check
 
-        byte[] widthArray = ArrayUtils.extract(header, 4,4); // created array with width bytes
+        byte[] widthArray = ArrayUtils.extract(header, 4, 4); // created array with width bytes
         byte[] heightArray = ArrayUtils.extract(header, 8, 4); // created array with height bytes
         byte[] channelsArray = ArrayUtils.extract(header, 12, 1); // created array with channel byte
         byte[] colorSpaceArray = ArrayUtils.extract(header, 13, 1); // created array with colorspace byte
-        byte[] concatColor = ArrayUtils.concat(new byte[]{0,0,0}, colorSpaceArray); // concatenated colorspace array
+        byte[] concatColor = ArrayUtils.concat(new byte[]{0, 0, 0}, colorSpaceArray); // concatenated colorspace array
         // of size 4, as toInt needs a table size of 4
-        byte[] concatChannel = ArrayUtils.concat(new byte[]{0,0,0}, channelsArray); // concatenated channel array of
+        byte[] concatChannel = ArrayUtils.concat(new byte[]{0, 0, 0}, channelsArray); // concatenated channel array of
         // size 4, as toInt needs a table size of 4
 
         int width = ArrayUtils.toInt(widthArray); // convert widthArray to Int
@@ -64,15 +67,16 @@ public final class QOIDecoder {
 
     /**
      * Store the pixel in the buffer and return the number of consumed bytes
-     * @param buffer (byte[][]) - Buffer where to store the pixel
-     * @param input (byte[]) - Stream of bytes to read from
-     * @param alpha (byte) - Alpha component of the pixel
+     *
+     * @param buffer   (byte[][]) - Buffer where to store the pixel
+     * @param input    (byte[]) - Stream of bytes to read from
+     * @param alpha    (byte) - Alpha component of the pixel
      * @param position (int) - Index in the buffer
-     * @param idx (int) - Index in the input
+     * @param idx      (int) - Index in the input
      * @return (int) - The number of consumed bytes
      * @throws AssertionError See handouts section 6.2.1
      */
-    public static int decodeQoiOpRGB(byte[][] buffer, byte[] input, byte alpha, int position, int idx){
+    public static int decodeQoiOpRGB(byte[][] buffer, byte[] input, byte alpha, int position, int idx) {
         assert buffer != null; // check if buffer is not null
         assert input != null; // check if input is not null
         assert position < buffer.length; // check if position points to a valid location of buffer
@@ -98,14 +102,15 @@ public final class QOIDecoder {
 
     /**
      * Store the pixel in the buffer and return the number of consumed bytes
-     * @param buffer (byte[][]) - Buffer where to store the pixel
-     * @param input (byte[]) - Stream of bytes to read from
+     *
+     * @param buffer   (byte[][]) - Buffer where to store the pixel
+     * @param input    (byte[]) - Stream of bytes to read from
      * @param position (int) - Index in the buffer
-     * @param idx (int) - Index in the input
+     * @param idx      (int) - Index in the input
      * @return (int) - The number of consumed bytes
      * @throws AssertionError See handouts section 6.2.2
      */
-    public static int decodeQoiOpRGBA(byte[][] buffer, byte[] input, int position, int idx){
+    public static int decodeQoiOpRGBA(byte[][] buffer, byte[] input, int position, int idx) {
         assert buffer != null; // check buffer is not null
         assert input != null; // check input is not null
         assert position < buffer.length; // check that position points to a valid location of buffer
@@ -129,12 +134,13 @@ public final class QOIDecoder {
 
     /**
      * Create a new pixel following the "QOI_OP_DIFF" schema.
+     *
      * @param previousPixel (byte[]) - The previous pixel
-     * @param chunk (byte) - A "QOI_OP_DIFF" data chunk
+     * @param chunk         (byte) - A "QOI_OP_DIFF" data chunk
      * @return (byte[]) - The newly created pixel
      * @throws AssertionError See handouts section 6.2.4
      */
-    public static byte[] decodeQoiOpDiff(byte[] previousPixel, byte chunk){
+    public static byte[] decodeQoiOpDiff(byte[] previousPixel, byte chunk) {
         assert previousPixel != null; // check if previous pixel is not null
         assert previousPixel.length == 4; // check if previous pixel is equal to 4
         assert chunk > 63; // check if it's greater than 63 as 01_00_00_00 has a byte value of 63. If the first byte is
@@ -168,12 +174,13 @@ public final class QOIDecoder {
 
     /**
      * Create a new pixel following the "QOI_OP_LUMA" schema
+     *
      * @param previousPixel (byte[]) - The previous pixel
-     * @param data (byte[]) - A "QOI_OP_LUMA" data chunk
+     * @param data          (byte[]) - A "QOI_OP_LUMA" data chunk
      * @return (byte[]) - The newly created pixel
      * @throws AssertionError See handouts section 6.2.5
      */
-    public static byte[] decodeQoiOpLuma(byte[] previousPixel, byte[] data){
+    public static byte[] decodeQoiOpLuma(byte[] previousPixel, byte[] data) {
         assert (previousPixel != null); //check if previous pixel is not null
         assert (data != null); //check if data is not null
         assert (previousPixel.length == 4); //check the length of previous pixel is 4
@@ -210,29 +217,30 @@ public final class QOIDecoder {
 
     /**
      * Store the given pixel in the buffer multiple times
-     * @param buffer (byte[][]) - Buffer where to store the pixel
-     * @param pixel (byte[]) - The pixel to store
-     * @param chunk (byte) - a QOI_OP_RUN data chunk
+     *
+     * @param buffer   (byte[][]) - Buffer where to store the pixel
+     * @param pixel    (byte[]) - The pixel to store
+     * @param chunk    (byte) - a QOI_OP_RUN data chunk
      * @param position (int) - Index in buffer to start writing from
      * @return (int) - number of written pixels in buffer
      * @throws AssertionError See handouts section 6.2.6
      */
-    public static int decodeQoiOpRun(byte[][] buffer, byte[] pixel, byte chunk, int position){
-        assert buffer != null; //check buffer is not null
-        assert pixel != null; //check pixel is not null
-        assert pixel.length == 4;//check that pixel length is 4
+    public static int decodeQoiOpRun(byte[][] buffer, byte[] pixel, byte chunk, int position) {
+        assert buffer != null; // check buffer is not null
+        assert pixel != null; // check pixel is not null
+        assert pixel.length == 4;// check that pixel length is 4
         assert position <= buffer.length;//check that position is less than the length of our buffer array
 
-        //check that buffer can return the length of the pixel, check the length of each row equals the length of pixel
+        // check that buffer can return the length of the pixel, check the length of each row equals the length of pixel
         for (byte[] bytes : buffer) {
             assert pixel.length == bytes.length;
         }
 
-        //gets the last six bits from the binary representation of chunk to get the number of pixels to modify, starting
-        //from 0 to nPixels
+        // gets the last six bits from the binary representation of chunk to get the number of pixels to modify, starting
+        // from 0 to nPixels
         byte nPixel = (byte) (chunk & 0b11_11_11);
 
-        //insert pixel in buffer for nPixel times, starting from 0 to nPixel
+        // insert pixel in buffer for nPixel times, starting from 0 to nPixel
         for (int i = position; i <= position + nPixel; i++) {
             buffer[i] = pixel;
         }
@@ -245,46 +253,129 @@ public final class QOIDecoder {
 
     /**
      * Decode the given data using the "Quite Ok Image" Protocol
-     * @param data (byte[]) - Data to decode
-     * @param width (int) - The width of the expected output
+     *
+     * @param data   (byte[]) - Data to decode
+     * @param width  (int) - The width of the expected output
      * @param height (int) - The height of the expected output
      * @return (byte[][]) - Decoded "Quite Ok Image"
      * @throws AssertionError See handouts section 6.3
      */
-    public static byte[][] decodeData(byte[] data, int width, int height){
+    public static byte[][] decodeData(byte[] data, int width, int height) {
         assert data != null;  //check if data is not null
         assert width >= 0; //check if width is positive
         assert height >= 0; //check if height is positive
-        return Helper.fail("Not Implemented");
+
+        int idx = 0;
+        byte[][] hash = new byte[64][4];
+
+        byte[][] buffer = new byte[width * height][4];
+        buffer[0] = QOISpecification.START_PIXEL;
+        int bufferCount = 0;
+
+
+        for (int i = idx; i < data.length; i++) {
+
+            byte tag = (byte) (data[i] & 0b11_00_00_00);
+            byte[] previousPixel = buffer[bufferCount];
+            boolean runCheck = false;
+
+
+            if ((tag == QOISpecification.QOI_OP_RUN_TAG) && (data[i] != QOISpecification.QOI_OP_RGBA_TAG) &&
+                    (data[i] != QOISpecification.QOI_OP_RGB_TAG)) {
+
+                int run = decodeQoiOpRun(buffer, previousPixel, data[i], bufferCount);
+
+                for (int j = 1; j <= run; j++) {
+                    buffer[bufferCount] = previousPixel;
+                    bufferCount++;
+                }
+                runCheck = true;
+
+            } else if ((data[i] == QOISpecification.QOI_OP_RGBA_TAG) && (data[i] != QOISpecification.QOI_OP_RGB_TAG)) {
+
+                byte[] rgba = new byte[4];
+                for (int j = 0; j < rgba.length; j++) {
+                    rgba[j] = data[i + j + 1];
+                }
+
+                buffer[bufferCount] = rgba;
+                bufferCount++;
+                i = i + 4;
+
+            } else if ((data[i] != QOISpecification.QOI_OP_RGBA_TAG) && (data[i] == QOISpecification.QOI_OP_RGB_TAG)) {
+
+                byte[] rgb = new byte[3];
+                for (int j = 0; j < rgb.length; j++) {
+                    rgb[j] = data[i + j + 1];
+                }
+
+                buffer[bufferCount] = rgb;
+                bufferCount++;
+                i = i + 3;
+
+
+            } else if (tag == QOISpecification.QOI_OP_DIFF_TAG) {
+
+                buffer[bufferCount] = decodeQoiOpDiff(previousPixel, data[i]);
+                bufferCount++;
+
+            } else if (tag == QOISpecification.QOI_OP_LUMA_TAG) {
+
+                byte[] luma = new byte[2];
+                luma[0] = data[i];
+                luma[1] = data[i+1];
+                buffer[bufferCount] = decodeQoiOpLuma(previousPixel, luma);
+                bufferCount++;
+                i++;
+
+            } else if (tag == QOISpecification.QOI_OP_INDEX_TAG) {
+
+                byte index = (byte) (data[i] & 0b00_11_11_11);
+                buffer[bufferCount] = hash[index];
+                bufferCount++;
+
+
+            }
+            if (!runCheck) {
+                hash[QOISpecification.hash(buffer[bufferCount])]= buffer[bufferCount];
+            }
+        }
+        for (int i = 0; i < buffer.length; i++) {
+            for (int j = 0; j < buffer[i].length; j++) {
+                System.out.println(buffer[i][j]);
+            }
+        }
+        return buffer;
     }
 
     /**
      * Decode a file using the "Quite Ok Image" Protocol
+     *
      * @param content (byte[]) - Content of the file to decode
      * @return (Image) - Decoded image
      * @throws AssertionError if content is null
      */
-    public static Image decodeQoiFile(byte[] content){
+    public static Image decodeQoiFile(byte[] content) {
         assert content != null; //assert content isn't null
 
-        byte [][]  partitionArray = ArrayUtils.partition(content, 14, content.length-2); //byte table partitionArray containing the partition of array content into smaller segments.
-        byte [] eof = partitionArray[2]; //end of file data equals partitionArray[2]
-        for (int i = 0; i <= 7; i++){
+        byte[][] partitionArray = ArrayUtils.partition(content, 14, content.length - 2); //byte table partitionArray containing the partition of array content into smaller segments.
+        byte[] eof = partitionArray[2]; //end of file data equals partitionArray[2]
+        for (int i = 0; i <= 7; i++) {
             assert eof[i] == QOISpecification.QOI_EOF[i]; //assert eof is equal to the expected eof
         }
 
-        byte [] header = partitionArray[0]; //header equals first row of partitionArray
-        byte [] rawData = partitionArray[1]; //rawData equals second row of partition array
+        byte[] header = partitionArray[0]; //header equals first row of partitionArray
+        byte[] rawData = partitionArray[1]; //rawData equals second row of partition array
 
 
-        int [] decodeHeader = decodeHeader(header); //transforms encoded header into something readable by us
+        int[] decodeHeader = decodeHeader(header); //transforms encoded header into something readable by us
         int width = decodeHeader[0]; //width equals first element of header
         int height = decodeHeader[1]; //height equals second element of header
         byte numChannels = (byte) decodeHeader[2]; //the number of channels equals third element of header
         byte colorSpace = (byte) decodeHeader[3]; //the color space equals fourth element of header
 
-        byte [][] data = decodeData(rawData, width, height); //making a list of byte pixels
-        int [][] decodedPixels = ArrayUtils.channelsToImage(data, height, width); //making a table of int pixels
+        byte[][] data = decodeData(rawData, width, height); //making a list of byte pixels
+        int[][] decodedPixels = ArrayUtils.channelsToImage(data, height, width); //making a table of int pixels
         return Helper.generateImage(decodedPixels, numChannels, colorSpace); //generating the image using the table of int pixels, the number of channels and the color space
 
     }

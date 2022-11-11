@@ -70,8 +70,8 @@ public final class Main {
         assert testDecodeQoiOpRGBA();
         assert testDecodeQoiOpDiff();
         assert testDecodeQoiOpLuma();
-        //assert testDecodeQoiOpRun();
-        //assert testDecodeData();
+        assert testDecodeQoiOpRun();
+        assert testDecodeData();
 
 
         System.out.println("All the tests passes. Congratulations");
