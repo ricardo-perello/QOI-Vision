@@ -73,17 +73,19 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.2.1
      */
     public static int decodeQoiOpRGB(byte[][] buffer, byte[] input, byte alpha, int position, int idx){
-        assert buffer != null;
-        assert input != null;
-        assert position < buffer.length;
-        assert idx < input.length;
+        assert buffer != null; // check if buffer is not null
+        assert input != null; // check if input is not null
+        assert position < buffer.length; // check if position points to a valid location of buffer
+        assert idx < input.length; // check if idx contains enough data to recover pixel
+        assert input.length >= 3; // check that input contains enough data to recover pixel
 
         byte[] rgba = new byte[4];
 
         int count = 0;
-        // insert rgb into array
+        // insert rgb from input into rgba array
         for (int i = idx; i < idx + 3; i++) {
-            rgba[i - idx] = input[i];
+            rgba[i - idx] = input[i]; // take position idx from buffer and put it in position 0 to i < idx + 3 in rgba
+            //array
             count++;
         }
         rgba[3] = alpha; // add alpha to position 3
@@ -104,21 +106,23 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.2.2
      */
     public static int decodeQoiOpRGBA(byte[][] buffer, byte[] input, int position, int idx){
-        assert buffer != null;
-        assert input != null;
-        assert position < buffer.length;
-        assert idx < input.length;
+        assert buffer != null; // check buffer is not null
+        assert input != null; // check input is not null
+        assert position < buffer.length; // check that position points to a valid location of buffer
+        assert idx < input.length; // check that idx points to a valid location of buffer
+        assert input.length >= 4; // check that input contains enough data to recover pixel
 
         byte[] rgba = new byte[4];
 
         int count = 0;
-        // insert rgb into array
+        // insert rgb from input into rgba array
         for (int i = idx; i < idx + 4; i++) {
-            rgba[i - idx] = input[i];
+            rgba[i - idx] = input[i]; // take position idx from buffer and put it in position 0 to i < idx + 4 in rgba
+            //array
             count++;
         }
 
-        buffer[position] = rgba; // insert array rgb at location "position"
+        buffer[position] = rgba; // insert rgb array at location "position"
 
         return count; // return the count of rgb, which is always 4
     }
@@ -131,25 +135,26 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.2.4
      */
     public static byte[] decodeQoiOpDiff(byte[] previousPixel, byte chunk){
-        assert previousPixel != null;
-        assert previousPixel.length == 4;
+        assert previousPixel != null; // check if previous pixel is not null
+        assert previousPixel.length == 4; // check if previous pixel is equal to 4
         assert chunk > 63; // check if it's greater than 63 as 01_00_00_00 has a byte value of 63. If the first byte is
-        // 1 then it makes the value negative, hence checking for > 63 is all that is needed
+        // 1 then it makes the value negative, hence checking for > 63 is all that is needed (hence check tag of chunk
+        //has the value QOI_OP_DIFF_TAG
 
         int r, g, b;
         byte dred = 0, dgreen = 0, dblue = 0;
 
-        // >> removes last 4 numbers and 0b11 is the mask to retrieve the first 2 digits
-        r = 0b11 & (chunk >> 4);
-        dred = ((byte) (r - 2));
 
-        // >> removes last 2 numbers and 0b11 is the mask to retrieve the middle 2 digits
-        g = 0b11 & (chunk >> 2);
-        dgreen = ((byte) (g - 2));
+        r = 0b11 & (chunk >> 4);// >> removes last 4 numbers and 0b11 is the mask to retrieve the first 2 bits (red)
+        dred = ((byte) (r - 2)); // dred is r - the offset
 
-        // >> removes nothing and 0b11 is the mask to retrieve the last 2 digits
-        b = 0b11 & chunk;
-        dblue = ((byte) (b - 2));
+
+        g = 0b11 & (chunk >> 2);// >> removes last 2 numbers and 0b11 is the mask to retrieve the middle 2 bits (green)
+        dgreen = ((byte) (g - 2)); // dgreen is g - the offset
+
+
+        b = 0b11 & chunk;  // >> removes nothing and 0b11 is the mask to retrieve the last 2 bits (blue)
+        dblue = ((byte) (b - 2)); // dblue is blue - the offset
 
         byte[] currentPixel = new byte[4];
         currentPixel[0] = (byte) (previousPixel[0] + dred);
@@ -169,7 +174,6 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.2.5
      */
     public static byte[] decodeQoiOpLuma(byte[] previousPixel, byte[] data){
-
         assert (previousPixel != null); //check if previous pixel is not null
         assert (data != null); //check if data is not null
         assert (previousPixel.length == 4); //check the length of previous pixel is 4
@@ -219,15 +223,16 @@ public final class QOIDecoder {
         assert pixel.length == 4;//check that pixel length is 4
         assert position <= buffer.length;//check that position is less than the length of our buffer array
 
-        //check that buffer can return the length of the pixel
+        //check that buffer can return the length of the pixel, check the length of each row equals the length of pixel
         for (byte[] bytes : buffer) {
             assert pixel.length == bytes.length;
         }
 
-        //gets the last six bits from the binary representation of chunk to get the number of pixels to modify
+        //gets the last six bits from the binary representation of chunk to get the number of pixels to modify, starting
+        //from 0 to nPixels
         byte nPixel = (byte) (chunk & 0b11_11_11);
 
-        //insert pixel in buffer for nPixel times
+        //insert pixel in buffer for nPixel times, starting from 0 to nPixel
         for (int i = position; i <= position + nPixel; i++) {
             buffer[i] = pixel;
         }
@@ -247,6 +252,9 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.3
      */
     public static byte[][] decodeData(byte[] data, int width, int height){
+        assert data != null;  //check if data is not null
+        assert width >= 0; //check if width is positive
+        assert height >= 0; //check if height is positive
         return Helper.fail("Not Implemented");
     }
 
