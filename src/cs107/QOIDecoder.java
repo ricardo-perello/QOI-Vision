@@ -354,7 +354,6 @@ public final class QOIDecoder {
 
         byte[][] partitionArray = ArrayUtils.partition(content, 14, content.length - 22, 8); //byte table partitionArray containing the partition of array content into smaller segments.
         byte[] eof = partitionArray[2]; //end of file data equals partitionArray[2]
-        //assert ArrayUtils.equals(eof, QOISpecification.QOI_EOF);
         for (int i = 0; i <= 7; i++) {
             assert eof[i] == QOISpecification.QOI_EOF[i]; //assert eof is equal to the expected eof
         }
