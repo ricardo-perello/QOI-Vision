@@ -265,30 +265,28 @@ public final class QOIDecoder {
         assert width >= 0; //check if width is positive
         assert height >= 0; //check if height is positive
 
-        int idx = 0;
         byte[][] hash = new byte[64][4];
 
         byte[][] buffer = new byte[width * height][4];
-        buffer[0] = QOISpecification.START_PIXEL;
+        byte[] previousPixel = QOISpecification.START_PIXEL;
         int bufferCount = 0;
 
 
-        for (int i = idx; i < data.length; i++) {
+        for (int i = 0; i < data.length; i++) {
 
             byte tag = (byte) (data[i] & 0b11_00_00_00);
-            byte[] previousPixel = buffer[bufferCount];
             boolean runCheck = false;
+
+            if (i != 0){
+                previousPixel = buffer[bufferCount-1];
+            }
 
 
             if ((tag == QOISpecification.QOI_OP_RUN_TAG) && (data[i] != QOISpecification.QOI_OP_RGBA_TAG) &&
                     (data[i] != QOISpecification.QOI_OP_RGB_TAG)) {
 
-                int run = decodeQoiOpRun(buffer, previousPixel, data[i], bufferCount);
+                bufferCount += decodeQoiOpRun(buffer, previousPixel, data[i], bufferCount);
 
-                for (int j = 1; j <= run; j++) {
-                    buffer[bufferCount] = previousPixel;
-                    bufferCount++;
-                }
                 runCheck = true;
 
             } else if ((data[i] == QOISpecification.QOI_OP_RGBA_TAG) && (data[i] != QOISpecification.QOI_OP_RGB_TAG)) {
