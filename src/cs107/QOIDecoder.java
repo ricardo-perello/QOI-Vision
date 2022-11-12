@@ -302,10 +302,11 @@ public final class QOIDecoder {
 
             } else if ((data[i] != QOISpecification.QOI_OP_RGBA_TAG) && (data[i] == QOISpecification.QOI_OP_RGB_TAG)) {
 
-                byte[] rgb = new byte[3];
-                for (int j = 0; j < rgb.length; j++) {
+                byte[] rgb = new byte[4];
+                for (int j = 0; j < rgb.length-1; j++) {
                     rgb[j] = data[i + j + 1];
                 }
+                rgb[3] = previousPixel[3];
 
                 buffer[bufferCount] = rgb;
                 bufferCount++;
