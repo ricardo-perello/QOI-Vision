@@ -285,7 +285,7 @@ public final class QOIDecoder {
             if ((tag == QOISpecification.QOI_OP_RUN_TAG) && (data[i] != QOISpecification.QOI_OP_RGBA_TAG) &&
                     (data[i] != QOISpecification.QOI_OP_RGB_TAG)) {
 
-                bufferCount += decodeQoiOpRun(buffer, previousPixel, data[i], bufferCount);
+                bufferCount += (decodeQoiOpRun(buffer, previousPixel, data[i], bufferCount)+1);
 
                 runCheck = true;
 
@@ -335,7 +335,7 @@ public final class QOIDecoder {
 
             }
             if (!runCheck) {
-                hash[QOISpecification.hash(buffer[bufferCount])]= buffer[bufferCount];
+                hash[QOISpecification.hash(buffer[bufferCount-1])]= buffer[bufferCount-1];
             }
         }
         for (int i = 0; i < buffer.length; i++) {
