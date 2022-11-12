@@ -229,16 +229,16 @@ public final class QOIDecoder {
         assert buffer != null; // check buffer is not null
         assert pixel != null; // check pixel is not null
         assert pixel.length == 4;// check that pixel length is 4
-        assert position <= buffer.length;//check that position is less than the length of our buffer array
-
-        // check that buffer can return the length of the pixel, check the length of each row equals the length of pixel
-        for (byte[] bytes : buffer) {
-            assert pixel.length == bytes.length;
-        }
+        assert (position <= buffer.length) && (position >= 0);//check that position is less than the length of our
+        // buffer array and that it is greater than zero
 
         // gets the last six bits from the binary representation of chunk to get the number of pixels to modify, starting
         // from 0 to nPixels
         byte nPixel = (byte) (chunk & 0b11_11_11);
+
+        // check that buffer can return the length of the pixel, check if position plus the number of pixels to modify
+        //is less than the buffer length
+        assert position + nPixel <= buffer.length;
 
         // insert pixel in buffer for nPixel times, starting from 0 to nPixel
         for (int i = position; i <= position + nPixel; i++) {
