@@ -339,11 +339,6 @@ public final class QOIDecoder {
                 hash[QOISpecification.hash(buffer[bufferCount-1])]= buffer[bufferCount-1];
             }
         }
-        for (int i = 0; i < buffer.length; i++) {
-            for (int j = 0; j < buffer[i].length; j++) {
-                System.out.println(buffer[i][j]);
-            }
-        }
         return buffer;
     }
 
@@ -357,8 +352,9 @@ public final class QOIDecoder {
     public static Image decodeQoiFile(byte[] content) {
         assert content != null; //assert content isn't null
 
-        byte[][] partitionArray = ArrayUtils.partition(content, 14, content.length - 2); //byte table partitionArray containing the partition of array content into smaller segments.
+        byte[][] partitionArray = ArrayUtils.partition(content, 14, content.length - 22, 8); //byte table partitionArray containing the partition of array content into smaller segments.
         byte[] eof = partitionArray[2]; //end of file data equals partitionArray[2]
+        //assert ArrayUtils.equals(eof, QOISpecification.QOI_EOF);
         for (int i = 0; i <= 7; i++) {
             assert eof[i] == QOISpecification.QOI_EOF[i]; //assert eof is equal to the expected eof
         }
