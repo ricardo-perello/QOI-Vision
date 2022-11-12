@@ -287,7 +287,8 @@ public final class QOIEncoder {
          ======== qoiOpDiff =========
         ===========================*/
 
-            else if ((diff[3] == 0) && (((diff[0]) > -3) && ((diff[0]) < 2)) && (((diff[1]) > -3) && ((diff[1]) < 2)) && (((diff[2]) > -3) && ((diff[2]) < 2))) {
+            else if ((diff[3] == 0) && (((diff[0]) > -3) && ((diff[0]) < 2)) && (((diff[1]) > -3) && ((diff[1]) < 2)) &&
+                    (((diff[2]) > -3) && ((diff[2]) < 2))) {
                 //else if diff in alpha is 0, and diffs in other channels are between -3 < x < 2
                 encodedata.add(qoiOpDiff(diffLuma)[0]); //add one byte of qoiOpDiff to encode data (I used diffLuma because the alpha diff isn't stored in the byte as it is 0)
             }
@@ -297,7 +298,8 @@ public final class QOIEncoder {
             ========    qoiOpLuma   =========
             =================================*/
 
-            else if ((diff[3] == 0) && ((diffLuma[1] > -33) && (diffLuma[1] < 32)) && ((diff[0] - diff[1]) > -9) && ((diff[0] - diff[1]) < 8) && (((diff[2] - diff[1]) > -9) && ((diff[2] - diff[1]) < 8))) {
+            else if ((diff[3] == 0) && ((diffLuma[1] > -33) && (diffLuma[1] < 32)) && ((diff[0] - diff[1]) > -9) &&
+                    ((diff[0] - diff[1]) < 8) && (((diff[2] - diff[1]) > -9) && ((diff[2] - diff[1]) < 8))) {
                 //else if diff in alpha = 0, and diff green is between -33 < x < 32, and difference between diff green and red(blue) is between -9 < x < 8
                 encodedata.add(qoiOpLuma(diffLuma)[0]); //add two bytes of qoiOpLuma to encode data
                 encodedata.add(qoiOpLuma(diffLuma)[1]);
