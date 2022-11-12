@@ -78,8 +78,8 @@ public final class Main {
         //pngToQoi("references/beach.png","beach.qoi");
         //Diff.diff("references/beach.qoi","res/beach.qoi");
 
-        qoiToPng("references/qoi_op_run.qoi","qoi_op_run.png");
-        Diff.diff("references/qoi_op_run.png","res/qoi_op_run.png");
+        qoiToPng("references/beach.qoi","beach.png");
+        Diff.diff("references/beach.png","res/beach.png");
 
 
     }
