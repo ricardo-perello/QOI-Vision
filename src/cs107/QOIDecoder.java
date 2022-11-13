@@ -277,7 +277,7 @@ public final class QOIDecoder {
             byte tag = (byte) (data[i] & 0b11_00_00_00); // mask first two bits of byte and store them as tag
             boolean isRun = false; //restart boolean isRun
 
-            if (i != 0){ // if the byte is not the first byte, then the previous pixel equals pixel in buffer[bufferCount-1]
+            if (i != 0) { // if the byte is not the first byte, then the previous pixel equals pixel in buffer[bufferCount-1]
                 previousPixel = buffer[bufferCount-1];
             }
 
