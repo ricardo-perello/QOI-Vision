@@ -89,7 +89,7 @@ public final class QOIDecoder {
         // insert rgb from input into rgba array
         for (int i = idx; i < idx + 3; i++) {
             rgba[i - idx] = input[i]; // take position idx from buffer and put it in position 0 to i < idx + 3 in rgba
-            //array
+            // array
             count++;
         }
         rgba[3] = alpha; // add alpha to position 3
@@ -123,7 +123,7 @@ public final class QOIDecoder {
         // insert rgb from input into rgba array
         for (int i = idx; i < idx + 4; i++) {
             rgba[i - idx] = input[i]; // take position idx from buffer and put it in position 0 to i < idx + 4 in rgba
-            //array
+            // array
             count++;
         }
 
@@ -145,27 +145,27 @@ public final class QOIDecoder {
         assert previousPixel.length == 4; // check if previous pixel is equal to 4
         assert chunk > 63; // check if it's greater than 63 as 01_00_00_00 has a byte value of 63. If the first byte is
         // 1 then it makes the value negative, hence checking for > 63 is all that is needed (hence check tag of chunk
-        //has the value QOI_OP_DIFF_TAG
+        // has the value QOI_OP_DIFF_TAG
 
         int r, g, b;
-        byte dred = 0, dgreen = 0, dblue = 0;
+        byte dRed = 0, dGreen = 0, dBlue = 0;
 
 
         r = 0b11 & (chunk >> 4);// >> removes last 4 numbers and 0b11 is the mask to retrieve the first 2 bits (red)
-        dred = ((byte) (r - 2)); // dred is r - the offset
+        dRed = ((byte) (r - 2)); // dRed is r - the offset
 
 
         g = 0b11 & (chunk >> 2);// >> removes last 2 numbers and 0b11 is the mask to retrieve the middle 2 bits (green)
-        dgreen = ((byte) (g - 2)); // dgreen is g - the offset
+        dGreen = ((byte) (g - 2)); // dGreen is g - the offset
 
 
         b = 0b11 & chunk;  // >> removes nothing and 0b11 is the mask to retrieve the last 2 bits (blue)
-        dblue = ((byte) (b - 2)); // dblue is blue - the offset
+        dBlue = ((byte) (b - 2)); // dBlue is blue - the offset
 
         byte[] currentPixel = new byte[4];
-        currentPixel[0] = (byte) (previousPixel[0] + dred);
-        currentPixel[1] = (byte) (previousPixel[1] + dgreen);
-        currentPixel[2] = (byte) (previousPixel[2] + dblue);
+        currentPixel[0] = (byte) (previousPixel[0] + dRed);
+        currentPixel[1] = (byte) (previousPixel[1] + dGreen);
+        currentPixel[2] = (byte) (previousPixel[2] + dBlue);
         currentPixel[3] = previousPixel[3];
 
         return currentPixel;
@@ -181,35 +181,35 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.2.5
      */
     public static byte[] decodeQoiOpLuma(byte[] previousPixel, byte[] data) {
-        assert (previousPixel != null); //check if previous pixel is not null
-        assert (data != null); //check if data is not null
-        assert (previousPixel.length == 4); //check the length of previous pixel is 4
+        assert (previousPixel != null); // check if previous pixel is not null
+        assert (data != null); // check if data is not null
+        assert (previousPixel.length == 4); // check the length of previous pixel is 4
         assert (data[0] <= -65); // luma is between -128 and -65 as the tag is 0b10_00_00_00, and it is less than -65 as
         // because the OP_Run_tag has 11 in the beginning, hence -65 is the max
 
         int r, g, b;
-        byte dred = 0, dgreen = 0, dblue = 0;
+        byte dRed = 0, dGreen = 0, dBlue = 0;
 
-        //need 6 bits, hence mask is 6 1's, masks it with the first byte and retrieves the 6 green bits
+        // need 6 bits, hence mask is 6 1's, masks it with the first byte and retrieves the 6 green bits
         g = data[0] & 0b11_11_11;
-        //offset by 32
-        dgreen = ((byte) (g - 32));
+        // offset by 32
+        dGreen = ((byte) (g - 32));
 
-        //need first 4 bits from second byte in array as those bits represent red
+        // need first 4 bits from second byte in array as those bits represent red
         r = 0b11_11 & (data[1] >> 4);
-        //dred is r + the difference in green - the offset
-        dred = ((byte) (r + dgreen - 8));
+        // dRed is r + the difference in green - the offset
+        dRed = ((byte) (r + dGreen - 8));
 
-        //need last 4 bits from second byte array, those last 4 bits represent blue
+        // need last 4 bits from second byte array, those last 4 bits represent blue
         b = 0b11_11 & (data[1]);
-        //dblue is b + the difference in green - the offset
-        dblue = ((byte) (b + dgreen - 8));
+        // dBlue is b + the difference in green - the offset
+        dBlue = ((byte) (b + dGreen - 8));
 
         byte[] currentPixel = new byte[4];
 
-        currentPixel[0] = (byte) (previousPixel[0] + dred);
-        currentPixel[1] = (byte) (previousPixel[1] + dgreen);
-        currentPixel[2] = (byte) (previousPixel[2] + dblue);
+        currentPixel[0] = (byte) (previousPixel[0] + dRed);
+        currentPixel[1] = (byte) (previousPixel[1] + dGreen);
+        currentPixel[2] = (byte) (previousPixel[2] + dBlue);
         currentPixel[3] = previousPixel[3];
 
         return currentPixel;
@@ -229,15 +229,15 @@ public final class QOIDecoder {
         assert buffer != null; // check buffer is not null
         assert pixel != null; // check pixel is not null
         assert pixel.length == 4;// check that pixel length is 4
-        assert (position <= buffer.length) && (position >= 0);//check that position is less than the length of our
+        assert (position <= buffer.length) && (position >= 0); // check that position is less than the length of our
         // buffer array and that it is greater than zero
 
-        // gets the last six bits from the binary representation of chunk to get the number of pixels to modify, starting
-        // from 0 to nPixels
+        // gets the last six bits from the binary representation of chunk to get the number of pixels to modify,
+        // starting from 0 to nPixels
         byte nPixel = (byte) (chunk & 0b11_11_11);
 
         // check that buffer can return the length of the pixel, check if position plus the number of pixels to modify
-        //is less than the buffer length
+        // is less than the buffer length
         assert position + nPixel <= buffer.length;
 
         // insert pixel in buffer for nPixel times, starting from 0 to nPixel
@@ -277,7 +277,7 @@ public final class QOIDecoder {
             byte tag = (byte) (data[i] & 0b11_00_00_00);
             boolean isRun = false;
 
-            if (i != 0){
+            if (i != 0) {
                 previousPixel = buffer[bufferCount-1];
             }
 
