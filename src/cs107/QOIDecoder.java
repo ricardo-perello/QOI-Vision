@@ -275,7 +275,7 @@ public final class QOIDecoder {
         for (int i = 0; i < data.length; i++) {
 
             byte tag = (byte) (data[i] & 0b11_00_00_00);
-            boolean runCheck = false;
+            boolean isRun = false;
 
             if (i != 0){
                 previousPixel = buffer[bufferCount-1];
@@ -287,7 +287,7 @@ public final class QOIDecoder {
 
                 bufferCount += (decodeQoiOpRun(buffer, previousPixel, data[i], bufferCount)+1);
 
-                runCheck = true;
+                isRun = true;
 
             } else if ((data[i] == QOISpecification.QOI_OP_RGBA_TAG) && (data[i] != QOISpecification.QOI_OP_RGB_TAG)) {
 
@@ -335,7 +335,7 @@ public final class QOIDecoder {
 
 
             }
-            if (!runCheck) {
+            if (!isRun) {
                 hash[QOISpecification.hash(buffer[bufferCount-1])]= buffer[bufferCount-1];
             }
         }

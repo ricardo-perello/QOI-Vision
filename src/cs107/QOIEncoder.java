@@ -221,7 +221,7 @@ public final class QOIEncoder {
         byte[] prevPixel = START_PIXEL; //first pixel is always constant (as per instructions)
         byte[][] hash = new byte[64][4]; //definition of hash table
         int count = 0; //used for qoiOpRun
-        boolean run; //boolean that will become true if opRun is used for a pixel and will cause the hash not to be saved into the hash table
+        boolean isRun; //boolean that will become true if opRun is used for a pixel and will cause the hash not to be saved into the hash table
         ArrayList<Byte> encodedata = new ArrayList<>();//arrayList where the encoded data is going to be stored
 
 
@@ -241,7 +241,7 @@ public final class QOIEncoder {
             =================================*/
 
             byte pixHash = hash(image[i]); //produces a hash value from a pixel
-            run = false; //restart run check boolean
+            isRun = false; //restart run check boolean
 
             /*================================
             ==difference between two pixels ==
@@ -269,7 +269,7 @@ public final class QOIEncoder {
                     encodedata.add(qoiOpRun((byte) count)[0]); //add one byte of qoiOpRun to encode data
                     count = 0; //reset count
                 }
-                run = true; //set run to true to avoid saving hash index to hash table
+                isRun = true; //set run to true to avoid saving hash index to hash table
 
             }
 
@@ -329,7 +329,7 @@ public final class QOIEncoder {
             ====== adding pixel to hash ======
             =================================*/
 
-            if ((!(ArrayUtils.equals(hash[pixHash], image[i]))) && (!run)) { //if the pixel isn't stored in the hash table yet, and process OpRun hasn't happened, then save pixel in the hash table at position pixHash
+            if ((!(ArrayUtils.equals(hash[pixHash], image[i]))) && (!isRun)) { //if the pixel isn't stored in the hash table yet, and process OpRun hasn't happened, then save pixel in the hash table at position pixHash
                 hash[pixHash] = image[i];
             }
 
