@@ -261,13 +261,13 @@ public final class QOIDecoder {
      * @throws AssertionError See handouts section 6.3
      */
     public static byte[][] decodeData(byte[] data, int width, int height) {
-        assert data != null;  //check if data is not null
-        assert width >= 0; //check if width is positive
-        assert height >= 0; //check if height is positive
+        assert data != null;  // check if data is not null
+        assert width >= 0; // check if width is positive
+        assert height >= 0; // check if height is positive
 
         byte[][] hash = new byte[64][4];
 
-        byte[][] buffer = new byte[width * height][4];
+        byte[][] buffer = new byte[width * height][4]; // create buffer in which we will store the pixels
         byte[] previousPixel = QOISpecification.START_PIXEL;
         int bufferCount = 0;
 
@@ -313,21 +313,23 @@ public final class QOIDecoder {
                 i = i + 3;
 
 
-            } else if (tag == QOISpecification.QOI_OP_DIFF_TAG) {
+            } else if (tag == QOISpecification.QOI_OP_DIFF_TAG) { // if byte has diff tag, call diff method, which
+                // stores the difference plus the previous pixel to obtain a new pixel
 
                 buffer[bufferCount] = decodeQoiOpDiff(previousPixel, data[i]);
                 bufferCount++;
 
-            } else if (tag == QOISpecification.QOI_OP_LUMA_TAG) {
+            } else if (tag == QOISpecification.QOI_OP_LUMA_TAG) { // if byte has luma tag, call the luma method
 
-                byte[] luma = new byte[2];
+                byte[] luma = new byte[2]; // create new array to store previous pixel and current pixel
                 luma[0] = data[i];
                 luma[1] = data[i+1];
                 buffer[bufferCount] = decodeQoiOpLuma(previousPixel, luma);
                 bufferCount++;
                 i++;
 
-            } else if (tag == QOISpecification.QOI_OP_INDEX_TAG) {
+            } else if (tag == QOISpecification.QOI_OP_INDEX_TAG) { // if byte has index tag, call index method,
+                // stores pixel from hash into buffer
 
                 byte index = (byte) (data[i] & 0b00_11_11_11);
                 buffer[bufferCount] = hash[index];
@@ -335,6 +337,7 @@ public final class QOIDecoder {
 
 
             }
+            // store pixel in hash if the byte doesn't have a run tag (doesn't pass through run)
             if (!isRun) {
                 hash[QOISpecification.hash(buffer[bufferCount-1])]= buffer[bufferCount-1];
             }

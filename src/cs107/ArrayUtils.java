@@ -213,7 +213,7 @@ public final class ArrayUtils {
         // input length
         assert (start >= 0) && (start < input.length) && (length >= 0) && (start + length <= input.length);
 
-        byte [] extracted = new byte [length]; //create new array with size length
+        byte [] extracted = new byte [length]; // create new array with size length
         int extract = 0; // tracks position with extracted array
 
         // stores each value starting from start until length + start
