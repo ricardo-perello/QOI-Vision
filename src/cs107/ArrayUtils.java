@@ -116,7 +116,7 @@ public final class ArrayUtils {
      */
     public static int toInt(byte[] bytes) {
         assert (bytes.length == 4); //make sure the size of the array is 4
-        assert bytes != null; // assert byte array is not null, bytes can't be null
+        assert bytes != null; // ass ert byte array is not null, bytes can't be null
         int element; //temporary variable that holds element i
         int value = 0; //variable that holds the concatenated values
         for (int i = 0; i < 4; i++) {
@@ -155,10 +155,9 @@ public final class ArrayUtils {
      * @throws AssertionError if the input is null
      */
     public static byte[] concat(byte... bytes) {
+        assert (!(bytes == null)); // check that bytes is not null
 
-        assert (!(bytes == null)); //check that bytes is not null
-
-        //return all bytes
+        // return all bytes
         return bytes;
     }
 
@@ -170,30 +169,29 @@ public final class ArrayUtils {
      * or one of the inner arrays of input is null.
      */
     public static byte[] concat(byte[]... tabs) {
-        assert (!(tabs == null)); //checks if arrays within arrays is null
+        assert (tabs != null); // checks if arrays within arrays are not null
 
         int count = 0;
-        //checks if values in the arrays inside arrays are null
-        for (int i = 0; i < tabs.length; i++) {
-            assert (!(tabs[i] == null));
-            count = count + tabs[i].length;
+        // checks if values in the arrays inside arrays are not null
+        for (byte[] tab : tabs) {
+            assert tab != null;
+            count += tab.length; // gives the total sum of arrays in each row
         }
 
-        byte[] concatarray = new byte[count];
+        byte[] concatArray = new byte[count];
 
-        int concat = 0;
-        //stores each values in each column for i many rows inside tabs
-        for (int i = 0; i < tabs.length; i++) {
+        int concat = 0; // tracks the position within our concatArray
+        // stores each value in each column for tabs.length many rows within tabs, into our concatArray
+        for (byte[] tab : tabs) {
 
-            for (int j = 0; j < tabs[i].length; j++) {
+            for (byte temp : tab) {
 
-                byte temp = tabs[i][j];
-                concatarray[concat] = temp; //stores the element stored in temp into concatarray
+                concatArray[concat] = temp; // stores the elements stored in temp into concatArray
                 concat += 1;
 
             }
         }
-        return concatarray;
+        return concatArray;
     }
 
     // ==================================================================================
@@ -210,15 +208,16 @@ public final class ArrayUtils {
      * start + length should also be smaller than the input's length
      */
     public static byte[] extract(byte[] input, int start, int length) {
-        assert input != null; //break if input is null
-        assert (start >= 0 && start < input.length && length >= 0 && start + length <= input.length); //start is greater
-        // than 0 and less than input length, and start + length is less than or equal to input length
+        assert input != null; // checks if input is not null
+        // checks that start is greater than 0 and less than input length, and start + length is less than or equal to
+        // input length
+        assert (start >= 0) && (start < input.length) && (length >= 0) && (start + length <= input.length);
 
         byte [] extracted = new byte [length]; //create new array with size length
-        int extract = 0;
+        int extract = 0; // tracks position with extracted array
 
-        //store each value starting from start until length + start
-        for (int i = start; i <= length + start - 1; i++) {
+        // stores each value starting from start until length + start
+        for (int i = start; i < length + start; i++) {
             byte temp = input[i];
             extracted[extract] = temp;
             extract += 1;
@@ -237,13 +236,13 @@ public final class ArrayUtils {
      * or the sum of the elements in sizes is different from the input's length
      */
     public static byte[][] partition(byte[] input, int... sizes) {
-        assert input != null; //check if input is not null
-        assert sizes != null; //check if sizes is not null
+        assert input != null; // checks if input is not null
+        assert sizes != null; // checks if sizes is not null
 
-        //Check if sum of sizes is equal to input length
+        // checks if sum of sizes is equal to input length
         int count = 0;
-        for (int i = 0; i < sizes.length; i++) {
-            count += sizes[i];
+        for (int size : sizes) {
+            count += size;
         }
         assert count == input.length;
 
@@ -251,23 +250,20 @@ public final class ArrayUtils {
         byte[][] partitions = new byte[sizes.length][];
         int endIndex = sizes[0];
         int startIndex = 0;
-
         for (int i = 0; i < sizes.length; i++) {
-            int j1 = 0;
-            byte[] tempArray = new byte[sizes[i]];
-            //creation of temp arrays containing their respective sizes
-            for (int j = startIndex; j < endIndex; j++) {
-                tempArray[j1] = input[j];
-                j1++;
 
+            int partition = 0;
+            byte[] tempArray = new byte[sizes[i]];// creation of temp arrays containing their respective sizes
+            for (int j = startIndex; j < endIndex; j++) {
+                tempArray[partition] = input[j];
+                partition++;
             }
-            //change start and end index until i reaches the last element of sizes
+            // change start and end index until i reaches the last element of sizes
             if (i < sizes.length -1) {
                 endIndex += sizes[i+1];
                 startIndex += sizes[i];
-
             }
-            //storing each temporary array in our final expected array
+            // storing each temporary array in our final expected array
             partitions[i] = tempArray;
         }
         return partitions;
