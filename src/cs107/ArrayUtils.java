@@ -116,7 +116,7 @@ public final class ArrayUtils {
      */
     public static int toInt(byte[] bytes) {
         assert (bytes.length == 4); //make sure the size of the array is 4
-        assert bytes != null; // ass ert byte array is not null, bytes can't be null
+        assert bytes != null; // assert byte array is not null, bytes can't be null
         int element; //temporary variable that holds element i
         int value = 0; //variable that holds the concatenated values
         for (int i = 0; i < 4; i++) {
