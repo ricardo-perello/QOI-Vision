@@ -265,7 +265,7 @@ public final class QOIDecoder {
         assert width >= 0; //check if width is positive
         assert height >= 0; //check if height is positive
 
-        byte[][] hash = new byte[64][4];
+        byte[][] hash = new byte[64][4]; // creating hash table
 
         byte[][] buffer = new byte[width * height][4];
         byte[] previousPixel = QOISpecification.START_PIXEL;
@@ -339,6 +339,7 @@ public final class QOIDecoder {
                 hash[QOISpecification.hash(buffer[bufferCount-1])]= buffer[bufferCount-1];
             }
         }
+        assert bufferCount == buffer.length;
         return buffer;
     }
 
