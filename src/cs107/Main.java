@@ -1,5 +1,6 @@
 package cs107;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -75,8 +76,8 @@ public final class Main {
 
 
         System.out.println("All the tests passes. Congratulations");
-        //pngToQoi("references/beach.png","beach.qoi");
-        //Diff.diff("references/beach.qoi","res/beach.qoi");
+        pngToQoi("references/beach.png","beach.qoi");
+        Diff.diff("references/beach.qoi","res/beach.qoi");
 
         qoiToPng("references/beach.qoi","beach.png");
         Diff.diff("references/beach.png","res/beach.png");
