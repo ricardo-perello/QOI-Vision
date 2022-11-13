@@ -267,29 +267,36 @@ public final class QOIDecoder {
 
         byte[][] hash = new byte[64][4]; // creating hash table
 
-        byte[][] buffer = new byte[width * height][4]; // create buffer in which we will store the pixels
-        byte[] previousPixel = QOISpecification.START_PIXEL;
-        int bufferCount = 0;
+        byte[][] buffer = new byte[width * height][4]; // creating buffer with size height * width
+        byte[] previousPixel = QOISpecification.START_PIXEL; // defining previousPixel as constant START_PIXEl
+        int bufferCount = 0; //defining buffer count as 0
 
 
-        for (int i = 0; i < data.length; i++) {
+        for (int i = 0; i < data.length; i++) { // for every byte in data
 
-            byte tag = (byte) (data[i] & 0b11_00_00_00);
-            boolean isRun = false;
+            byte tag = (byte) (data[i] & 0b11_00_00_00); // mask first two bits of byte and store them as tag
+            boolean isRun = false; //restart boolean isRun
 
-            if (i != 0) {
+            if (i != 0){ // if the byte is not the first byte, then the previous pixel equals pixel in buffer[bufferCount-1]
                 previousPixel = buffer[bufferCount-1];
             }
 
 
             if ((tag == QOISpecification.QOI_OP_RUN_TAG) && (data[i] != QOISpecification.QOI_OP_RGBA_TAG) &&
                     (data[i] != QOISpecification.QOI_OP_RGB_TAG)) {
+                // if tag is equal to run, and byte isn't equal to rgb or rgba tag then increase bufferCount by
+                // the amount of repetitions of the pixel. Runs decodeQoiOpRun which stores this pixel in the buffer
+                // the amount of times returned by the function
 
                 bufferCount += (decodeQoiOpRun(buffer, previousPixel, data[i], bufferCount)+1);
 
-                isRun = true;
+                isRun = true; // since we have gone through the run function this variable becomes true to avoid storing
+                // this pixel in the hash table.
 
             } else if ((data[i] == QOISpecification.QOI_OP_RGBA_TAG) && (data[i] != QOISpecification.QOI_OP_RGB_TAG)) {
+                // if the byte equals the rgba tag and doesn't equal rgb then we store the next 4 bytes in the data
+                // as a pixel in the buffer, with every pixel being one channel.
+
 
                 byte[] rgba = new byte[4];
                 for (int j = 0; j < rgba.length; j++) {
@@ -298,9 +305,12 @@ public final class QOIDecoder {
 
                 buffer[bufferCount] = rgba;
                 bufferCount++;
-                i = i + 4;
+                i = i + 4; // increase i by 4 because we're skipping the 4 bytes that we already read
 
             } else if ((data[i] != QOISpecification.QOI_OP_RGBA_TAG) && (data[i] == QOISpecification.QOI_OP_RGB_TAG)) {
+                // if the byte doesn't equal the rgba tag and equals rgb then we store the next 3 bytes in the data plus
+                // the alpha channel of the prev pixel as a pixel in the buffer, with every pixel being one channel.
+
 
                 byte[] rgb = new byte[4];
                 for (int j = 0; j < rgb.length-1; j++) {
@@ -310,7 +320,7 @@ public final class QOIDecoder {
 
                 buffer[bufferCount] = rgb;
                 bufferCount++;
-                i = i + 3;
+                i = i + 3; // increase i by 3 because we're skipping the 4 bytes that we already read
 
 
             } else if (tag == QOISpecification.QOI_OP_DIFF_TAG) { // if byte has diff tag, call diff method, which
